@@ -1,0 +1,17 @@
+import Vue from "vue";
+import SaveButton from "src/components/SaveButton";
+import CompanyAutocomplete from "src/components/CompanyAutocomplete";
+import BeeSubheader from "src/components/BeeSubheader";
+import GraphDisplay from "src/components/GraphDisplay";
+import FeedbackForm from "src/components/FeedbackForm";
+import DualNav from "src/components/DualNav";
+import BeeIssue from "src/components/BeeIssue";
+import BeeCompany from "src/components/BeeCompany";
+Vue.component("BeeCompany", BeeCompany);
+Vue.component("BeeIssue", BeeIssue);
+Vue.component("BeeSubheader", BeeSubheader);
+Vue.component("SaveButton", SaveButton);
+Vue.component("GraphDisplay", GraphDisplay);
+Vue.component("FeedbackForm", FeedbackForm);
+Vue.component("CompanyAutocomplete", CompanyAutocomplete);
+Vue.component("DualNav", DualNav);

@@ -1,0 +1,142 @@
+/* General Stuff */
+@font-face { font-family: "Nevis"; src: url("fonts/nevis2.ttf") }
+.v-list-item__title.wrap { white-space: normal }
+#app { background: repeat url("bg.png") }
+footer a { color: #000000 !important }
+
+/* Z-Index Stuff */
+header, .mobileNav { z-index: 8!important }
+footer { z-index: 8!important }
+
+/* Company Page Stuff */
+.beeheader {
+    color: #FFFFFF;
+    font-family: "Nevis";
+    font-size: 5rem;
+    text-align: center;
+    text-shadow: 4px 4px #000000;
+}
+.beeheader.d-sm-none {
+    font-size: 2rem;
+    text-shadow: 2px 2px #000000;
+}
+.homelink {
+    font-size: 0.85rem;
+    color: #D0BCB2!important;
+}
+
+.beesubmessage {
+    font-family: "Nevis";
+    color: #FFFFFF;
+    font-size: 1.1rem;
+    text-shadow: 1px 1px #000000;
+}
+h2.beesubmessage {
+    font-size: 2rem;
+}
+.beesubmessage a, .beesubmessage.beelink, .beesubmessage .beelink {
+    color: #1E92FF!important;
+    cursor: pointer;
+    text-decoration: none;
+}
+.beesubmessage a:hover, .beesubmessage.beelink:hover, .beesubmessage .beelink:hover { color: #9BCEFF!important }
+.viewNews {
+    filter: drop-shadow(1px 1px 0px #000000);
+    text-decoration: none;
+    margin-left: 10px;
+}
+.viewNews > i:hover  { color: #97C8F8!important }
+
+
+/* Headings and Subheadings */
+.beesubheader {
+    font-family: "Nevis";
+    color: #E7E400;
+    font-size: 1.2rem;
+    text-shadow: 1px 1px #000000;
+}
+.beesubheader>span {
+    bottom: 3px;
+    position: relative;
+    z-index: 4;
+}
+.beesubheader>i {
+    content: " ";
+    background-color: #4241A5;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    margin-left: -11px;
+    transform: skew(-15deg, -15deg);
+    border: 1px solid #1A1A68;
+}
+
+/* Lists */
+.v-list-item.issue {
+    background-color: #00000000;
+    margin-bottom: 20px;
+}
+.v-list-item.issue > .bg {
+    position: absolute;
+    top: 0;
+    left: -2%;
+    bottom: 0;
+    right: -2%;
+    background: #000000;
+    transform: skew(-45deg);
+    filter: drop-shadow(15px 7px 0px);
+}
+.v-list-item.issue > .bg.d-sm-none {
+    transform: skew(-5deg);
+    filter: drop-shadow(7px 5px 0px);
+}
+.v-list-item.issue > * { z-index: 7 }
+.v-list-item__action { margin-left: 0!important }
+
+/* Graph Stuff */
+.beebar {
+    position: relative;
+    z-index: 1;
+}
+.beebar::before {
+    border-top: 4px solid #000000;
+    content: "";
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0; bottom: 0;
+    width: 150px;
+    z-index: -1;
+}
+.graph {
+    background-color: #000048;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    margin: 0 auto;
+}
+.tippy-content { cursor: default }
+
+/* Sidebar + Mobile Nav */
+.hasSidebar { padding-left: 256px !important }
+@media screen and (max-width: 600px) {
+    .hasSidebar {
+        padding-left: 12px !important;
+        margin-bottom: 200px;
+    }
+}
+.mobileNav {
+    position: fixed;
+    margin: 0 auto;
+    bottom: 40px;
+}
+.mobileNav > div { width: 100% }
+
+/* Browse Page Filters */
+.selectionchip {
+    background-color: #000000!important;
+    color: #FFFFFF!important;
+}
+
+/* Admin View */
+.adminView > div > div { padding: 10px 40px }

@@ -1,0 +1,215 @@
+<template>
+    <v-container>
+        <v-row v-if="notFound">
+            <v-col style="text-align:center">
+                <div class="d-inline d-sm-none beeheader">{{$route.params.id}}</div>
+                <div class="d-none d-sm-inline beeheader">{{$route.params.id}}</div>
+            </v-col>
+        </v-row>
+        <v-row v-if="notFound">
+            <v-col class="beesubmessage" style="max-width:640px;margin:0 auto;text-align:center">
+                We don't have any information on this. If you have something you'd like to share, click 
+                <span class="beelink" @click="GiveDetails()">here</span> to submit some feedback!
+            </v-col>
+        </v-row>
+        <v-row v-if="entry !== null">
+            <v-col style="text-align:center">
+                <div class="d-inline d-sm-none beeheader">{{entry.name}}</div>
+                <div class="d-none d-sm-inline beeheader">{{entry.name}}</div>
+                <v-tooltip top>
+                    <template v-slot:activator="{on, attrs}">
+                        <a
+                            v-bind="attrs"
+                            v-on="on"
+                            external
+                            nofollow
+                            noopener
+                            noreferrer
+                            :href="'https://duckduckgo.com/?iar=news&q=%22'+encodeURIComponent(entry.name) + '%22'"
+                            target="_blank"
+                            class="viewNews"
+                            >
+                            <v-icon color="#1976D2">mdi-newspaper-variant</v-icon>
+                        </a>
+                    </template>
+                    <span>Search for News</span>
+                </v-tooltip>
+            </v-col>
+        </v-row>
+        <v-row v-if="entry !== null" style="text-align:center">
+            <v-col v-if="entry.typename">
+                <BeeSubheader text="Category" />
+                <div class="beesubmessage">{{entry.typename}}</div>
+            </v-col>
+            <v-col v-if="entry.parents.length > 0">
+                <BeeSubheader text="Owned by" />
+                <div class="beesubmessage">
+                    <span v-for="(item, key) in entry.parents" :key="key">
+                        <span v-if="key !== 0">, </span>
+                        <router-link :to="`/`+parentInfo[item].text">{{parentInfo[item].text}}</router-link>
+                        <span v-if="item !== parentInfo[item].rootid">
+                        (<router-link :to="`/`+parentInfo[item].rootname">{{parentInfo[item].rootname}}</router-link>)
+                        </span>
+                    </span>
+                </div>
+            </v-col>
+            <v-col v-if="entry.children.length > 0">
+                <BeeSubheader text="Parent of" />
+                <div class="beesubmessage" v-if="entry.children.length < 4 || showFullChildren">
+                    <span v-for="(item, key) in entry.children" :key="key">
+                        <span v-if="key !== 0">, </span>
+                        <router-link :to="`/`+item.text">{{item.text}}</router-link>
+                    </span>
+                </div>
+                <div class="beesubmessage" v-if="entry.children.length >= 4 && !showFullChildren">
+                    <span v-for="(item, key) in compChildren" :key="key">
+                        <span v-if="key !== 0">, </span>
+                        <router-link :to="`/`+item.text">{{item.text}}</router-link>
+                    </span>,
+                    <span class="beelink" @click="showFullChildren=true">and {{entry.children.length - 2}} others</span>
+                </div>
+            </v-col>
+        </v-row>
+        <v-row v-if="entry !== null">
+            <v-col v-show="!showGraph && (entry.parents.length > 0 || entry.children.length > 0)" class="beesubmessage beelink beebar" style="text-align:center">
+                <span @click="ShowGraph">Show Graph</span>
+            </v-col>
+            <v-col v-if="showGraph">
+                <div v-if="nodes.length===0" class="graph" style="width:75%; height: 360px">
+                    <v-progress-circular dark style="left:47%;top:144px" color="#FFFFFF" size="64" width="4" indeterminate />
+                </div>
+                <GraphDisplay v-if="nodes.length>0" :nodes="nodes" :links="links"/>
+                <div class="beesubmessage beelink beebar" style="text-align:center">
+                    <span @click="HideGraph">Hide Graph</span>
+                </div>
+            </v-col>
+        </v-row>
+        <!--<v-row v-if="entry.description">
+            <v-col cols="12">
+                {{entry.description}}
+            </v-col>
+        </v-row>-->
+        <v-row v-if="entry !== null">
+            <v-col cols="1"/>
+            <v-col cols="10">
+                <CompanyInfoPageIssueList
+                    v-if="entry !== null"
+                    :company-name="entry.name"
+                    :company-id="entry.id"
+                    />
+            </v-col>
+            <v-col cols="1"/>
+        </v-row>
+    </v-container>
+</template>
+<script>
+    import CompanyInfoPageIssueList from "src/views/CompanyInfoPageIssueList";
+    import { bee } from "src/utils/webmethod.js";
+    export default {
+        components: { CompanyInfoPageIssueList },
+        inject: ["triggerFeedback"],
+        data: () => ({
+            error: "",
+            entry: null,
+            parentInfo: null,
+            showGraph: false, 
+            showFullChildren: false,
+            nodes: [],
+            links: [],
+            notFound: false
+        }),
+        computed: {
+            compChildren() { return this.entry.children.slice(0, 2); }
+        },
+        beforeRouteEnter(to, from, next) {
+            bee.get("FindCompany", to.params.id, data => {
+                next(vm => {
+                    vm.entry = data.result;
+                    vm.parentInfo = data.parentVals;
+                    vm.showFullChildren = false;
+                    vm.notFound = false;
+                });
+            }, () => {
+                next(vm => {
+                    vm.error = "No record found."
+                    vm.notFound = true;
+                });
+            }, error => {
+                next(vm => vm.error = error);
+            });
+        },
+        beforeRouteUpdate(to, from, next) {
+            this.entry = null;
+            this.error = 0;
+            this.showGraph = false;
+            this.showFullChildren = false;
+            this.notFound = false;
+            this.links = [];
+            this.nodes = [];
+            bee.get("FindCompany", to.params.id, data => {
+                this.entry = data.result;
+                this.parentInfo = data.parentVals;
+                next();
+            }, () => {
+                this.error = "No record found.";
+                this.notFound = true;
+                next();
+            }, error => {
+                this.error = error;
+                next();
+            });
+        },
+        methods: {
+            HideGraph() { this.showGraph = false; },
+            ShowGraph() {
+                this.showGraph = true;
+                if(this.nodes.length > 0) { return; }
+                bee.get("GetGraphData", this.entry.id, data => {
+                    const nodeRef = {};
+                    this.nodes = [];
+                    this.links = [];
+                    const existingLinks = {};
+                    data.family.forEach(info => {
+                        if(nodeRef[info.parentId] === undefined) {
+                            const node = {
+                                id: info.parentId,
+                                name: info.parentName,
+                                label: (info.parentName.indexOf("The")===0?info.parentName[4]:info.parentName[0]),
+                                selected: info.parentId === this.entry.id,
+                                size: 0,
+                                iconx: parseInt(info.parentx),
+                                icony: parseInt(info.parenty)
+                            };
+                            this.nodes.push(node);
+                            nodeRef[node.id] = node;
+                        } else { nodeRef[info.parentId].size++; }
+                        if(nodeRef[info.childId] === undefined) {
+                            const node = {
+                                id: info.childId,
+                                name: info.childName,
+                                label: (info.childName.indexOf("The")===0?info.childName[4]:info.childName[0]),
+                                selected: info.childId === this.entry.id,
+                                size: 0,
+                                iconx: parseInt(info.childx),
+                                icony: parseInt(info.childy)
+                            };
+                            this.nodes.push(node);
+                            nodeRef[node.id] = node;
+                        }
+                        const linkKey = info.parentId + "." + info.childId;
+                        if(existingLinks[linkKey] === undefined) { // to prevent issues for companies with multiple parents
+                            existingLinks[linkKey] = true;
+                            this.links.push({
+                                source: info.parentId,
+                                target: info.childId
+                            });
+                        }
+                    });
+                });
+            },
+            GiveDetails() {
+                this.triggerFeedback(-1);
+            }
+        }
+    }
+</script>
