@@ -46,7 +46,7 @@
             ];
         }
         public function LoginJWT($username, $password) {
-            $pdo = new PDO("mysql:host=localhost;dbname=beeaccount", "root", "porridge");
+            $pdo = new PDO("mysql:host=localhost;dbname=beeaccount", "username", "password");
             $q = $pdo->prepare("SELECT password, rolebits, id FROM users WHERE username = :u");
             $q->execute(["u" => $username]);
             $tbl = $q->fetchAll();
