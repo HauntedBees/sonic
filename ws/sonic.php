@@ -184,13 +184,13 @@
                 $whereClause = "WHERE e.name LIKE :q";
             }
             $tbl = $this->sql->GetDataTable("
-            SELECT e.name, c.name AS categoryname, e.id, COUNT(DISTINCT i.id) AS issues, COUNT(DISTINCT r.child) AS children
+            SELECT e.name, c.name AS categoryname, c.icon AS categoryicon, e.id, COUNT(DISTINCT i.id) AS issues, COUNT(DISTINCT r.child) AS children
             FROM entity e
                 LEFT JOIN category c ON e.type = c.id
                 LEFT JOIN issues i ON i.entity = e.id
                 LEFT JOIN relationships r ON r.parent = e.id
             $whereClause
-            GROUP BY e.name, c.name, e.id
+            GROUP BY e.name, c.name, c.icon, e.id
             ORDER BY e.name ASC
             LIMIT $pageSize OFFSET $fullOffset", $params);
             echo json_encode(["success" => true, "result" => $tbl]);
@@ -200,21 +200,21 @@
             $fullOffset = $offset * $pageSize;
             $tbl = $this->sql->GetDataTable("
             WITH RECURSIVE fullcategories AS (
-                SELECT c.id, c.name
+                SELECT c.id, c.name, c.icon
                 FROM category c
                 WHERE c.id = :c
                 UNION ALL
-                SELECT c.id, c.name
+                SELECT c.id, c.name, c.icon
                 FROM fullcategories fc
                     INNER JOIN categoryrelationships r ON r.parent = fc.id
                     INNER JOIN category c ON r.child = c.id
             )
-            SELECT e.name, fc.name AS categoryname, e.id, COUNT(DISTINCT i.id) AS issues, COUNT(DISTINCT r.child) AS children
+            SELECT e.name, fc.name AS categoryname, fc.icon AS categoryicon, e.id, COUNT(DISTINCT i.id) AS issues, COUNT(DISTINCT r.child) AS children
             FROM entity e
                 INNER JOIN fullcategories fc ON e.type = fc.id
                 LEFT JOIN issues i ON i.entity = e.id
                 LEFT JOIN relationships r ON r.parent = e.id
-            GROUP BY e.name, fc.name, e.id
+            GROUP BY e.name, fc.name, fc.icon, e.id
             ORDER BY e.name ASC
             LIMIT $pageSize OFFSET $fullOffset", ["c" => $category]);
             echo json_encode(["success" => true, "result" => $tbl]);

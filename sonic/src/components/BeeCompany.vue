@@ -5,9 +5,9 @@
         <v-list-item-avatar>
             <v-tooltip top>
                 <template v-slot:activator="{on, attrs}">
-                    <v-icon v-bind="attrs" v-on="on">mdi-domain</v-icon>
+                    <v-icon v-bind="attrs" v-on="on">mdi-{{item.categoryicon}}</v-icon>
                 </template>
-                <span>Company</span>
+                <span>{{item.categoryname}}</span>
             </v-tooltip>
         </v-list-item-avatar>
         <v-list-item-content>
