@@ -8,8 +8,9 @@
                     <span v-if="$store.state.auth && $route.path.indexOf('/admin') >= 0" class="d-none d-sm-flex">Sonic Admin View ({{$store.state.username}})</span>
                     <span v-if="!$store.state.auth || $route.path.indexOf('/admin') < 0" class="d-none d-sm-flex">Sonic - The Unethical Consumption Database</span>
                 </router-link>
-                <v-icon v-show="!showSearch" style="margin-left:20px" @click="showSearch=true">mdi-magnify</v-icon>
-                <CompanyAutocomplete v-show="$route.path !== '/' && showSearch" @select="Select" addtl-style="width: 260px" />
+                <v-icon class="d-flex d-sm-none" v-if="!showSearch" style="margin-left:20px" @click="showSearch=true">mdi-magnify</v-icon>
+                <CompanyAutocomplete class="d-flex d-sm-none" v-if="showSearch" @select="Select" addtl-style="width: 260px" />
+                <CompanyAutocomplete class="d-none d-sm-flex" @select="Select" addtl-style="width: 400px" />
             </div>
             <v-spacer/>
             <v-dialog v-model="feedbackModal" max-width="640px">
