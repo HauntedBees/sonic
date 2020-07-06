@@ -1,5 +1,26 @@
 <template>
     <v-container>
+        <v-row class="d-block d-sm-none">
+            <v-chip-group column>
+                <v-chip
+                    v-show="browseTree.length > 0"
+                    dark
+                    class="selectionchip"
+                    @click="GoBack(-1)"
+                >
+                    <v-icon>mdi-arrow-left-circle</v-icon> Reset
+                </v-chip>
+                <v-chip
+                    v-for="(it, idx) in browseTree"
+                    :key="it.id"
+                    dark
+                    class="selectionchip"
+                    @click="GoBack(idx)"
+                    >
+                    <v-icon>mdi-{{it.icon}}</v-icon> {{it.name}}
+                </v-chip>
+            </v-chip-group>
+        </v-row>
         <v-row>
             <v-col cols="3" class="d-none d-sm-block">
                 <h2 class="beesubmessage">Categories</h2>
