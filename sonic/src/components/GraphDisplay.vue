@@ -76,31 +76,10 @@
                         }
                     ]
                 });
-                cy.on("mouseover", "node", e => {
-                    document.getElementsByClassName("loadedgraph")[0].style["cursor"] = "pointer";
-                    const node = e.target;
-                    const ref = node.popperRef();
-                    const dummyDomElement = document.createElement("div");
-                    if(tip) { tip.destroy(); }
-                    tip = new tippy(dummyDomElement, {
-                        trigger: "manual",
-                        lazy: false,
-                        onCreate: i => i.popperInstance.reference = ref,
-                        content: () => `
-                            <span class="beesubheader" style="margin-left: 10px; white-space: nowrap">
-                                <span>${node.data("name")}</span>
-                                <i/>
-                            </span>`
-                    });
-                    tip.show();
-                });
-                cy.on("mouseout", "node", () => {
-                    document.getElementsByClassName("loadedgraph")[0].style["cursor"] = "default";
-                    if(tip) {
-                        tip.destroy();
-                        tip = null;
-                    }
-                });
+                cy.on("mouseover", "node", ShowTooltip);
+                cy.on("tapstart", "node", ShowTooltip);
+                cy.on("tapend", "node", ShowTooltip);
+                cy.on("mouseout", "node", HideTooltip);
                 cy.on("vclick", "node", e => {
                     document.getElementsByClassName("loadedgraph")[0].style["cursor"] = "default";
                     if(tip) { tip.destroy(); tip = null; }
@@ -128,5 +107,30 @@
         const uri = c.toDataURL("image/png");
         savedLogos[coords] = uri;
         return uri;
+    }
+    function ShowTooltip(e) {
+        document.getElementsByClassName("loadedgraph")[0].style["cursor"] = "pointer";
+        const node = e.target;
+        const ref = node.popperRef();
+        const dummyDomElement = document.createElement("div");
+        if(tip) { tip.destroy(); }
+        tip = new tippy(dummyDomElement, {
+            trigger: "manual",
+            lazy: false,
+            onCreate: i => i.popperInstance.reference = ref,
+            content: () => `
+                <span class="beesubheader" style="margin-left: 10px; white-space: nowrap">
+                    <span>${node.data("name")}</span>
+                    <i/>
+                </span>`
+        });
+        tip.show();
+    }
+    function HideTooltip() {
+        document.getElementsByClassName("loadedgraph")[0].style["cursor"] = "default";
+        if(tip) {
+            tip.destroy();
+            tip = null;
+        }
     }
 </script>
