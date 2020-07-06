@@ -91,7 +91,7 @@
             SELECT id, name
             FROM category
             WHERE name LIKE :n
-            LIMIT 10", ["n" => "$query%"]);
+            LIMIT 10", ["n" => "%$query%"]);
             echo json_encode(["success" => true, "result" => $tbl]);
         }
         public function SaveCategory($it) {
