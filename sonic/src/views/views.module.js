@@ -34,7 +34,10 @@ const routes = [
         }
     }
 ];
-const router = new VueRouter({routes});
+const router = new VueRouter({
+    routes,
+    scrollBehavior() { return { x: 0, y: 0 }; }
+});
 router.afterEach(to => {
     Vue.nextTick(() => {
         document.title = (to.meta.titleFunc ? to.meta.titleFunc(to) : to.meta.title) || "Sonic - The Unethical Consumption Database";
