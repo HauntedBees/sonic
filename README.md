@@ -68,4 +68,4 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## want to make changes?
-cool. do the forking and submitting or whatever. if it's good stuff I'll probably merge it up.
+cool. do the forking and submitting or whatever. if it's good stuff I'll probably merge it up. if your issue is with the data itself on the live site or in the data.sql file here, [please use the Feedback page](https://www.hauntedbees.com/sonic.html#/info/feedback) or contact me through one of the methods described there.
