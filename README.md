@@ -27,6 +27,7 @@ The following node packages are used:
  * [vue-moment](https://github.com/brockpetrie/vue-moment)
  * [Moment.js](https://momentjs.com/)
  * [FileSaver.js](https://github.com/eligrey/FileSaver.js)
+
 As are the following dev dependencies:
  * [vue-template-compiler](https://www.npmjs.com/package/vue-template-compiler)
  * [vue-cli](https://cli.vuejs.org/)
