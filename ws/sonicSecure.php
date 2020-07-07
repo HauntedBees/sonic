@@ -17,7 +17,7 @@
         // Issues
         public function GetIssues($parent) {
             $tbl = $this->sql->GetDataTable("
-            SELECT i.id, i.issue, i.type, i.sourceurl, i.startdate, i.enddate, i.ongoing
+            SELECT i.id, i.issue, i.type, i.sourceurl, i.contentwarning, i.startdate, i.enddate, i.ongoing
             FROM issues i
                 INNER JOIN issuetype it ON i.type = it.id
             WHERE i.entity = :id
@@ -30,11 +30,11 @@
         }
         public function SaveIssue($i) {
             if($i->id === 0) {
-                $i->id = $this->sql->InsertAndReturnID("INSERT INTO issues (entity, type, issue, sourceurl, startdate, enddate, ongoing) VALUES (:e, :t, :d, :s, :d1, :d2, :o)", 
-                    ["e" => $i->companyid, "t" => $i->type, "d" => $i->issue, "s"=> $i->sourceurl, "d1" => $i->startdate, "d2" => $i->enddate, "o" => $i->ongoing ? 1 : 0]);
+                $i->id = $this->sql->InsertAndReturnID("INSERT INTO issues (entity, type, issue, sourceurl, startdate, enddate, contentwarning, ongoing) VALUES (:e, :t, :d, :s, :d1, :d2, :cw, :o)", 
+                    ["e" => $i->companyid, "t" => $i->type, "d" => $i->issue, "s"=> $i->sourceurl, "d1" => $i->startdate, "d2" => $i->enddate, "cw" => $i->contentwarning, "o" => $i->ongoing ? 1 : 0]);
             } else {
-                $this->sql->ExecuteNonQuery("UPDATE issues SET type = :t, issue = :d, sourceurl = :s, startdate = :d1, enddate = :d2, ongoing = :o WHERE id = :id", 
-                    ["t" => $i->type, "d" => $i->issue, "s"=> $i->sourceurl, "d1" => $i->startdate, "d2" => $i->enddate, "o" => $i->ongoing ? 1 : 0, "id" => $i->id]);
+                $this->sql->ExecuteNonQuery("UPDATE issues SET type = :t, issue = :d, sourceurl = :s, startdate = :d1, enddate = :d2, contentwarning = :cw, ongoing = :o WHERE id = :id", 
+                    ["t" => $i->type, "d" => $i->issue, "s"=> $i->sourceurl, "d1" => $i->startdate, "d2" => $i->enddate, "cw" => $i->contentwarning, "o" => $i->ongoing ? 1 : 0, "id" => $i->id]);
             }
             echo json_encode(["success" => true, "result" => $i->id]);
         }

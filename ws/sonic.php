@@ -59,7 +59,7 @@
             )
             SELECT a.id AS entityId, a.name AS entityName,
 					it.id AS issueTypeId, it.name AS issueType, it.icon AS issueIcon, it.color AS issueColor,
-                    i.id, i.issue, i.sourceurl, i.startdate, i.enddate, i.ongoing, a.namepath
+                    i.id, i.issue, i.sourceurl, i.startdate, i.enddate, i.ongoing, i.contentwarning, a.namepath
             FROM allentities a
 				INNER JOIN issues i ON a.id = i.entity
                 INNER JOIN issuetype it ON i.type = it.id
@@ -96,7 +96,7 @@
             SELECT 
                 e.id AS entityId, e.name AS entityName,
                 it.id AS issueTypeId, it.name AS issueType, it.icon AS issueIcon, it.color AS issueColor,
-                i.id, i.issue, i.sourceurl, i.startdate, i.enddate, i.ongoing, '' AS namepath
+                i.id, i.issue, i.sourceurl, i.startdate, i.enddate, i.ongoing, i.contentwarning, '' AS namepath
             FROM issues i
                 INNER JOIN issuetype it ON i.type = it.id
                 INNER JOIN entity e ON i.entity = e.id

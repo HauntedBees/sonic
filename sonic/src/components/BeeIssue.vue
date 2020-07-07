@@ -14,7 +14,17 @@
             <v-list-item-subtitle v-if="item.entityId !== companyId">
                 {{GetCompanyRelation(item)}}<router-link :to="'/' + item.entityName">{{item.entityName}}</router-link>
             </v-list-item-subtitle>
-            <v-list-item-title class="wrap" v-text="item.issue"/>
+            <v-list-item-title class="wrap" :style="{'text-align': (item.contentwarning!==null && !contentWarningByPassed) ? 'center' : '' }">
+                <span 
+                    @click="contentWarningByPassed=true"
+                    v-show="item.contentwarning!==null && !contentWarningByPassed"
+                    style="display:inline-block; cursor:pointer; border: 1px solid #AAAAAA; padding:4px 8px; border-radius:8px">
+                    <em>Content Warning:</em> {{item.contentwarning}}
+                    <br/>
+                    <span style="font-size:0.8rem">Click here to show the details.</span>
+                </span>
+                <span v-show="item.contentwarning===null || contentWarningByPassed">{{item.issue}}</span>
+            </v-list-item-title>
             <v-list-item-subtitle class="text-right">
                 <span v-if="item.ongoing">
                     <strong>Ongoing</strong> since {{item.startdate | moment("from")}}
@@ -61,6 +71,9 @@
             "namePaths": { type: Array, required: false },
             "item": { type: Object, required: true }
         },
+        data: () => ({
+            contentWarningByPassed: false
+        }),
         inject: ["triggerFeedback"],
         methods: {
             GetCompanyRelation(item) {

@@ -25,6 +25,11 @@
                                     </v-col>
                                 </v-row>
                                 <v-row>
+                                    <v-col cols="12">
+                                        <v-text-field v-model="editTarget.contentwarning" label="Content Warning (optional)" />
+                                    </v-col>
+                                </v-row>
+                                <v-row>
                                     <v-col cols="6">
                                         <v-select :items="issuetypes" label="Type" v-model="editTarget.type" item-text="name" item-value="id" />
                                         <v-switch v-model="editTarget.ongoing" label="Ongoing Issue" />
@@ -92,8 +97,8 @@
                 menustartdate: false,
                 menuenddate: false,
                 dialog: false,
-                defaultItem: { id: 0, entity: 0, type: 0, issue: "", sourceurl: "", startdate: null, enddate: null, ongoing: false },
-                editTarget: { id: 0, entity: 0, type: 0, issue: "", sourceurl: "", startdate: null, enddate: null, ongoing: false },
+                defaultItem: { id: 0, entity: 0, type: 0, issue: "", sourceurl: "", startdate: null, enddate: null, ongoing: false, contentwarning: "" },
+                editTarget: { id: 0, entity: 0, type: 0, issue: "", sourceurl: "", startdate: null, enddate: null, ongoing: false, contentwarning: "" },
                 editIdx: -1,
                 headers: [
                     { text: "Type", value: "type" },
