@@ -98,8 +98,8 @@ CREATE TABLE `issuetype` (
 CREATE TABLE `relationships` (
   `parent` int(11) NOT NULL,
   `child` int(11) NOT NULL,
-  `relationtype` int(11) NOT NULL,
-  `asOfDate` date NOT NULL
+  `relationtype` int(11) NOT NULL DEFAULT 1,
+  `asOfDate` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
