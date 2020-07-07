@@ -169,7 +169,7 @@
                         saveAs(b, `${this.nodes[0].name} Graph.png`);
                     });
                 };
-                graphImg.src = cy.png({ bg: "#000048" });
+                graphImg.src = cy.png({ bg: "#000048", maxWidth: 1000, maxHeight: 1000 });
             }
         }
     }
