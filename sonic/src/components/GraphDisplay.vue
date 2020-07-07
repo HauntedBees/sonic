@@ -1,12 +1,19 @@
 <template>
     <div>
+        <div style="width:1px;height:1px;overflow:hidden">
+            <div class="renderGraph" style="width:1000px; height:1000px" />
+        </div>
         <div class="graph loadedgraph" :style="{'width':big?'100%':'75%', 'height':big?'780px':'320px'}" />
+        <div v-if="!big" style="text-align:right; margin: 0 12%">
+            <v-btn @click="RenderMap" class="ma-2" dark color="blue darken-1">Download</v-btn>
+        </div>
     </div>
 </template>
 <script>
     import cytoscape from "cytoscape";
     import popper from "cytoscape-popper";
     import tippy from "tippy.js";
+    import { saveAs } from "file-saver";
     export default {
         props: {
             "nodes": { type:Array, required: true },
@@ -52,10 +59,10 @@
                                 "height": GetSize,
                                 "text-valign": "center",
                                 "text-halign": "center",
-                                "border-width": e => e.data("selected") ? "2px" : "3px",//"3px",
+                                "border-width": e => e.data("selected") ? "2px" : "3px",
                                 "border-style": "solid",
                                 "border-color": e => e.data("selected") ? "#22E546" : "#E7E721",
-                                "border-opacity": 1,//e => e.data("selected") ? 0.5 : 0.25,
+                                "border-opacity": 1,
                                 "background-color": "#FFFFFF",
                                 "font-family": "Nevis",
                                 "font-size": "18px",
@@ -89,6 +96,80 @@
                     this.$router.push(`/${path}`);
                 });
                 console.log("Time: " + (performance.now() - me));
+            },
+            RenderMap() {
+                const GetSize = e => {
+                    const size = e.data("size");
+                    return (30 + 5 * size) + "px";
+                };
+                const cy = cytoscape({
+                    container: document.getElementsByClassName("renderGraph"),
+                    elements: {
+                        nodes: this.nodes.map(e => ({ data: e })),
+                        edges: this.links.map(e => ({ data: e }))
+                    },
+                    layout: { name: "cose", animate: false },
+                    style: [
+                        {
+                            selector: "node[name]",
+                            style: {
+                                "label": e => e.data("name"),
+                                "text-valign": "bottom",
+                                "text-halign": "center",
+                                "text-wrap": "wrap",
+                                "text-max-width": 160,
+                                "font-size": "12px",
+                                "background-image": GetLogo,
+                                "background-width": "100%",
+                                "background-height": "100%",
+                                "width": GetSize,
+                                "height": GetSize,
+                                "border-width": "3px",
+                                "border-style": "solid",
+                                "border-color": "#E7E721",
+                                "border-opacity": 1,
+                                "background-color": "#FFFFFF",
+                                "font-family": "Nevis",
+                                "color": "#FFFFFF",
+                                "text-outline-color": "#F90018",
+                                "text-outline-width": "1px"
+                            }
+                        }, {
+                            selector: "edge",
+                            style: {
+                                "curve-style": "straight",
+                                "target-arrow-shape": "triangle",
+                                "target-arrow-color": "#E7E700",
+                                "line-color": "#E7E700"
+                            }
+                        }
+                    ]
+                });
+                const canv = document.createElement("canvas");
+                canv.width = 1000;
+                canv.height = 1000;
+                const ctx = canv.getContext("2d");
+                const graphImg = new Image();
+                const date = new Date(Math.min(...this.links.map(e=>new Date(e.asOfDate))));
+                graphImg.onload = () => {
+                    ctx.drawImage(graphImg, 0, 0);
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = "#F90018AA";
+                    ctx.font = "24px Nevis";
+                    ctx.fillStyle = "#FFFFFF";
+                    const str = `The ${this.nodes[0].name} Family`;
+                    ctx.strokeText(str, 6, 24);
+                    ctx.fillText(str, 6, 24);
+                    ctx.font = "16px Nevis";
+                    ctx.textAlign = "right";
+                    const credit = `Up to date as of ${date.toLocaleDateString()} from https://hauntedbees.com/sonic.html`;
+                    ctx.strokeText(credit, 996, 994);
+                    ctx.fillText(credit, 996, 994);
+                    canv.toBlob(b => {
+                        saveAs(b, `${this.nodes[0].name} Graph.png`);
+                    });
+                };
+                graphImg.src = cy.png({ bg: "#000048" });
             }
         }
     }

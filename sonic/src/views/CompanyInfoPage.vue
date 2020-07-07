@@ -201,7 +201,8 @@
                             existingLinks[linkKey] = true;
                             this.links.push({
                                 source: info.parentId,
-                                target: info.childId
+                                target: info.childId,
+                                asOfDate: info.asOfDate
                             });
                         }
                     });
