@@ -22,10 +22,10 @@
                 INNER JOIN issuetype it ON i.type = it.id
             WHERE i.entity = :id
             ORDER BY CASE
-                WHEN i.ongoing = 1 THEN NOW()
+                WHEN i.ongoing = 1 THEN NOW() + i.startdate
                 WHEN i.enddate IS NOT NULL THEN i.enddate
                 ELSE i.startdate
-            END DESC", ["id" => $parent]);
+            END ASC", ["id" => $parent]);
             echo json_encode(["success" => true, "result" => $tbl]);
         }
         public function SaveIssue($i) {
