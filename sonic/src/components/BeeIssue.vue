@@ -14,16 +14,16 @@
             <v-list-item-subtitle v-if="item.entityId !== companyId">
                 {{GetCompanyRelation(item)}}<router-link :to="'/' + item.entityName">{{item.entityName}}</router-link>
             </v-list-item-subtitle>
-            <v-list-item-title class="wrap" :style="{'text-align': (item.contentwarning!==null && !contentWarningByPassed) ? 'center' : '' }">
+            <v-list-item-title class="wrap" :style="{'text-align': (item.contentwarning && !contentWarningByPassed) ? 'center' : '' }">
                 <span 
                     @click="contentWarningByPassed=true"
-                    v-show="item.contentwarning!==null && !contentWarningByPassed"
+                    v-show="item.contentwarning && !contentWarningByPassed"
                     style="display:inline-block; cursor:pointer; border: 1px solid #AAAAAA; padding:4px 8px; border-radius:8px">
                     <em>Content Warning:</em> {{item.contentwarning}}
                     <br/>
                     <span style="font-size:0.8rem">Click here to show the details.</span>
                 </span>
-                <span v-show="item.contentwarning===null || contentWarningByPassed">{{item.issue}}</span>
+                <span v-show="!item.contentwarning || contentWarningByPassed">{{item.issue}}</span>
             </v-list-item-title>
             <v-list-item-subtitle class="text-right">
                 <span v-if="item.ongoing">
