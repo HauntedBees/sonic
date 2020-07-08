@@ -5,7 +5,7 @@
         <v-list-item-avatar>
             <v-tooltip top>
                 <template v-slot:activator="{on, attrs}">
-                    <v-icon v-bind="attrs" v-on="on">mdi-{{item.issueIcon}}</v-icon>
+                    <v-icon :color="BoostColor(item.issueColor, 50)" v-bind="attrs" v-on="on">mdi-{{item.issueIcon}}</v-icon>
                 </template>
                 <span>{{item.issueType}}</span>
             </v-tooltip>
@@ -96,8 +96,20 @@
                     return myIdx < theirIdx ? "Subsidiary - " : "Parent Company - ";
                 }
             },
-            FeedbackForIssue() {
-                this.triggerFeedback(this.item);
+            FeedbackForIssue() { this.triggerFeedback(this.item); },
+            BoostColor(color, amt) {
+                let [r, g, b] = color.substr(1).match(/.{2}/g);
+                [r, g, b] = [
+                    Math.min(255, parseInt(r, 16) + amt).toString(16),
+                    Math.min(255, parseInt(g, 16) + amt).toString(16), 
+                    Math.min(255, parseInt(b, 16) + amt).toString(16)
+                ];
+                const [rr, gg, bb] = [
+                    (r.length === 2 ? "" : "0") + r,
+                    (g.length === 2 ? "" : "0") + g,
+                    (b.length === 2 ? "" : "0") + b
+                ];
+                return `#${rr}${gg}${bb}`;
             }
         }
     }
