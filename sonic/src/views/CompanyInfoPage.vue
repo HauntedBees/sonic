@@ -202,6 +202,7 @@
                             this.links.push({
                                 source: info.parentId,
                                 target: info.childId,
+                                relationtype: info.relationtype,
                                 asOfDate: info.asOfDate
                             });
                         }

@@ -152,7 +152,9 @@
                     $this->sql->ExecuteNonQuery("DELETE FROM relationships WHERE child = :i", ["i" => $company->id]);
                 }
                 $this->sql->DoMultipleInsert($company->id, $company->synonyms, "INSERT INTO synonym (entityid, synonym) VALUES ");
-                $this->sql->DoMultipleInsert($company->id, $company->parents, "INSERT INTO relationships (child, parent) VALUES ");
+                $this->sql->DoMultipleInsertTwoPoint($company->id, 1, $company->parents, "INSERT INTO relationships (child, relationship, parent) VALUES ");
+                $this->sql->DoMultipleInsertTwoPoint($company->id, 2, $company->investors, "INSERT INTO relationships (child, relationship, parent) VALUES ");
+                $this->sql->DoMultipleInsertTwoPoint($company->id, 3, $company->miscrelationships, "INSERT INTO relationships (child, relationship, parent) VALUES ");
                 $this->sql->CommitTransaction();
                 echo json_encode(["success" => true, "result" => $company->id]);
             } catch(Exception $e) {

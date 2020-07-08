@@ -27,6 +27,17 @@
             $q = $this->pdo->prepare($query.implode(", ", $sql));
             $q->execute($params);
         }
+        public function DoMultipleInsertTwoPoint($left, $left2, $arr, $query) {
+            if(count($arr) === 0) { return; }
+            $params = ["a" => $left, "ab" => $left2];
+            $sql = [];
+            foreach($arr as $k=>$v) {
+                $params["b$k"] = $v;
+                $sql[] = "(:a, :ab, :b$k)";
+            }
+            $q = $this->pdo->prepare($query.implode(", ", $sql));
+            $q->execute($params);
+        }
         public function CreateInClauseFromArray($arr) {
             $params = [];
             $sql = [];

@@ -142,7 +142,7 @@
             $family = $this->GetFullChain($company, "
 			WITH RECURSIVE allentities AS (
                 SELECT e.id AS parentId, e.name AS parentName, r.child, r.asOfDate,
-                       e2.id AS childId, e2.name AS childName,
+                       e2.id AS childId, e2.name AS childName, r.relationtype,
                        e.iconx AS parentx, e.icony AS parenty,
                        e2.iconx AS childx, e2.icony AS childy
                 FROM entity e
@@ -151,7 +151,7 @@
                 WHERE e.id IN (:keysStr)
                 UNION ALL
                 SELECT a.childId AS parentId, a.childName AS parentName, r.child, r.asOfDate,
-                       e.id AS childId, e.name AS childName,
+                       e.id AS childId, e.name AS childName, r.relationtype,
                        a.childx AS parentx, a.childy AS parenty,
                        e.iconx AS childx, e.icony AS childy
                 FROM allentities a
@@ -159,7 +159,7 @@
                     INNER JOIN entity e ON r.child = e.id
 				WHERE a.child IS NOT NULL
             )
-            SELECT parentId, parentName, childId, childName, asOfDate, parentx, parenty, childx, childy,   
+            SELECT parentId, parentName, childId, childName, asOfDate, parentx, parenty, childx, childy, relationtype,  
                 CASE WHEN parentId = :source THEN 1 ELSE 0 END AS me
             FROM allentities a");
             foreach($family as &$val) {
@@ -170,7 +170,7 @@
         }
         public function GetFullGraphData() {
             $nodes = $this->sql->GetDataTable("SELECT id, name, iconx, icony FROM entity", []);
-            $links = $this->sql->GetDataTable("SELECT parent AS source, child AS target, asOfDate FROM relationships", []);
+            $links = $this->sql->GetDataTable("SELECT parent AS source, child AS target, relationtype, asOfDate FROM relationships", []);
             echo json_encode(["success" => true, "nodes" => $nodes, "links" => $links]);
         }
 
@@ -189,7 +189,7 @@
             FROM entity e
                 LEFT JOIN category c ON e.type = c.id
                 LEFT JOIN issues i ON i.entity = e.id
-                LEFT JOIN relationships r ON r.parent = e.id
+                LEFT JOIN relationships r ON r.parent = e.id AND r.relationtype IN (1, 2)
             $whereClause
             GROUP BY e.name, c.name, c.icon, e.id
             ORDER BY e.name ASC
@@ -214,7 +214,7 @@
             FROM entity e
                 INNER JOIN fullcategories fc ON e.type = fc.id
                 LEFT JOIN issues i ON i.entity = e.id
-                LEFT JOIN relationships r ON r.parent = e.id
+                LEFT JOIN relationships r ON r.parent = e.id AND r.relationtype IN (1, 2)
             GROUP BY e.name, fc.name, fc.icon, e.id
             ORDER BY e.name ASC
             LIMIT $pageSize OFFSET $fullOffset", ["c" => $category]);
@@ -257,18 +257,21 @@
                     SELECT r.parent AS id, e.name, 0 AS depth, r.parent AS chain
                     FROM relationships r
                         INNER JOIN entity e ON r.parent = e.id
-                    WHERE r.child = :i
+                    WHERE r.child = :i AND r.relationtype = 1
                     UNION ALL
                     SELECT ep.id, ep.name, a.depth + 1 AS depth, a.chain
                     FROM ancestor a
-                        INNER JOIN relationships r ON r.child = a.id
+                        INNER JOIN relationships r ON r.child = a.id AND r.relationtype = 1
                         INNER JOIN entity ep ON r.parent = ep.id
                 )
                 SELECT *
                 FROM ancestor
-                ORDER BY depth ASC",["i" => $obj["id"]]);
+                ORDER BY depth ASC", ["i" => $obj["id"]]);
                 $parentVals = [];
                 $obj["parents"] = [];
+                // TODO: these two
+                $obj["investors"] = [];
+                $obj["miscrelationships"] = [];
                 foreach($parents as $k=>$v) {
                     $id = intval($v["id"]);
                     $depth = intval($v["depth"]);
@@ -285,7 +288,7 @@
                 SELECT r.child, e.name
                 FROM relationships r
                     INNER JOIN entity e ON r.child = e.id
-                WHERE r.parent = :i", ["i" => $obj["id"]]));
+                WHERE r.parent = :i AND r.relationtype = 1", ["i" => $obj["id"]]));
                 echo json_encode(["success" => true, "result" => $obj, "parentVals" => $parentVals]);
             } else {
                 echo json_encode(["success" => false, "result" => "No results found."]);

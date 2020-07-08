@@ -56,7 +56,39 @@
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="12">
+            <v-col>
+                <v-autocomplete
+                  v-model="company.investors"
+                  :loading="$store.state.loading"
+                  :items="parentItems"
+                  :search-input.sync="searchParent"
+                  clearable
+                  cache-items
+                  flat
+                  hide-no-data
+                  hide-details
+                  multiple
+                  label="Specify Investors"
+                  />
+            </v-col>
+            <v-col>
+                <v-autocomplete
+                  v-model="company.miscrelationships"
+                  :loading="$store.state.loading"
+                  :items="parentItems"
+                  :search-input.sync="searchParent"
+                  clearable
+                  cache-items
+                  flat
+                  hide-no-data
+                  hide-details
+                  multiple
+                  label="Specify Misc. Relationships"
+                  />
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
                 <v-text-field v-model="company.description" label="Description (Optional)" :counter="1000"/>
             </v-col>
         </v-row>
@@ -110,7 +142,9 @@
                     synonyms: [],
                     type: 0,
                     newtype: "",
-                    parents: []
+                    parents: [],
+                    investors: [], 
+                    miscrelationships: []
                 },
                 nameRules: [
                     v => !!v || "Name is required",
@@ -167,6 +201,8 @@
                     type: 0,
                     newtype: "",
                     parents: [], 
+                    investors: [], 
+                    miscrelationships: [], 
                     synonyms: []
                 };
                 this.$refs.form.resetValidation();

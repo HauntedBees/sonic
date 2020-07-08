@@ -140,9 +140,10 @@
                             selector: "edge",
                             style: {
                                 "curve-style": "straight",
-                                "target-arrow-shape": "triangle",
-                                "target-arrow-color": "#E7E700",
-                                "line-color": "#E7E700"
+                                "target-arrow-shape": e => e.data("relationtype") === "3" ? "none" : "triangle",
+                                "target-arrow-color": GetEdgeColor,
+                                "line-color": GetEdgeColor,
+                                "line-style": e => e.data("relationtype") === "3" ? "dashed" : "solid"
                             }
                         }
                     ]
@@ -155,6 +156,15 @@
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const iconImg = new Image();
     const savedLogos = {};
+    function GetEdgeColor(e) {
+        console.log(e.data("relationtype"));
+        switch(e.data("relationtype")) {
+            case "1": return "#E7E700";
+            case "2": return "#00E513";
+            case "3": return "#00A2E2";
+        }
+        return "#FFFFFF";
+    }
     function GetLogo(e) {
         const iconx = e.data("iconx"), icony = e.data("icony");
         if(isNaN(iconx) || isNaN(icony)) { return "none"; }
