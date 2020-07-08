@@ -1,5 +1,6 @@
 <template>
     <v-autocomplete
+        ref="autocomplete"
         :style="addtlStyle"
         v-model="select"
         :loading="$store.state.loading"
@@ -30,6 +31,7 @@
             select(val) { val && this.$emit("select", val); }
         },
         methods: {
+            Focus() { this.$refs.autocomplete.focus(); },
             Filter(/*item, query, itemText*/) {
                 // TODO: make me matter?
                 //console.log(item, query, itemText);

@@ -8,8 +8,8 @@
                     <span v-if="$store.state.auth && $route.path.indexOf('/admin') >= 0" class="d-none d-sm-flex">Sonic Admin View ({{$store.state.username}})</span>
                     <span v-if="!$store.state.auth || $route.path.indexOf('/admin') < 0" class="d-none d-sm-flex">Sonic - The Unethical Consumption Database</span>
                 </router-link>
-                <v-icon class="d-flex d-sm-none" v-if="!showSearch" style="margin-left:20px" @click="showSearch=true">mdi-magnify</v-icon>
-                <CompanyAutocomplete class="d-flex d-sm-none" v-if="showSearch" @select="Select" addtl-style="width: 260px" />
+                <v-icon class="d-flex d-sm-none" v-if="!showSearch" style="margin-left:20px" @click="ShowSearchBox()">mdi-magnify</v-icon>
+                <CompanyAutocomplete ref="mobilesearch" class="d-flex d-sm-none" v-show="showSearch" @select="Select" addtl-style="width: 260px" />
                 <CompanyAutocomplete class="d-none d-sm-flex" @select="Select" addtl-style="width: 400px" />
             </div>
             <v-spacer/>
@@ -80,6 +80,12 @@
             OpenFeedback(id) {
                 this.issueId = parseInt(id);
                 this.feedbackModal = true;
+            },
+            ShowSearchBox() {
+                this.showSearch = true;
+                this.$refs.mobilesearch.Focus();
+                //console.log(this.$refs["searchBox"]);
+                //this.$refs.searchBox.Focus();
             }
         }
     };
