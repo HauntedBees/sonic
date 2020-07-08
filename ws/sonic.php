@@ -292,19 +292,21 @@
         }
         private function GetFullChain($company, $query) {
             $ancestorCompanies = $this->sql->GetDataTable("
-			WITH RECURSIVE ancestor AS (
-                SELECT *, 0 AS depth
-                FROM entity
-                WHERE id = :id
+            WITH RECURSIVE ancestor AS (
+                SELECT e.id, r2.parent AS toppy
+                FROM entity e
+                    LEFT JOIN relationships r2 ON r2.child = e.id
+                WHERE e.id = :id
                 UNION ALL
-                SELECT ep.*, a.depth - 1
+                SELECT ep.id, r2.parent AS toppy
                 FROM ancestor a
                     INNER JOIN relationships r ON r.child = a.id
                     INNER JOIN entity ep ON r.parent = ep.id
+                    LEFT JOIN relationships r2 ON r2.child = ep.id
             )
-            SELECT id, depth
+            SELECT DISTINCT id
             FROM ancestor
-            ORDER BY depth ASC", ["id" => $company]);
+            WHERE toppy IS NULL", ["id" => $company]);
             if(count($ancestorCompanies) === 0) {
                 echo json_encode(["success" => false, "result" => "Company not found."]);
                 exit;
@@ -314,17 +316,9 @@
             $keysArr = [];
             $maxDepth = 0;
             foreach($ancestorCompanies as $i=>$ac) {
-                $myDepth = intval($ac["depth"]);
-                if($maxDepth === 0) {
-                    $maxDepth = $myDepth;
-                }
-                if($maxDepth === $myDepth) {
-                    $key = "root$i";
-                    $params[$key] = intval($ac["id"]);
-                    $keysArr[] = ":$key";
-                } else {
-                    break;
-                }
+                $key = "root$i";
+                $params[$key] = intval($ac["id"]);
+                $keysArr[] = ":$key";
             }
             $keysStr = implode(", ", $keysArr);
 
