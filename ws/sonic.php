@@ -59,7 +59,7 @@
             )
             SELECT a.id AS entityId, a.name AS entityName,
 					it.id AS issueTypeId, it.name AS issueType, it.icon AS issueIcon, it.color AS issueColor,
-                    i.id, i.issue, i.sourceurl, i.startdate, i.enddate, i.ongoing, i.contentwarning, a.namepath
+                    i.id, i.issue, i.sourceurl, i.startdate, i.enddate, i.ongoing, i.contentwarning, it.showOnTop, a.namepath
             FROM allentities a
 				INNER JOIN issues i ON a.id = i.entity
                 INNER JOIN issuetype it ON i.type = it.id
@@ -77,6 +77,7 @@
             foreach($allIssues as &$val) {
                 $val["entityId"] = intval($val["entityId"]);
                 $val["issueTypeId"] = intval($val["issueTypeId"]);
+                $val["showOnTop"] = intval($val["showOnTop"]) === 1;
             }
             echo json_encode(["success" => true, "result" => $allIssues]);
         }
@@ -111,7 +112,7 @@
 
         // Issue Types
         public function GetIssueTypes() {
-            $tbl = $this->sql->GetDataTable("SELECT id, name, icon, color FROM issuetype ORDER BY name ASC", []);
+            $tbl = $this->sql->GetDataTable("SELECT id, name, icon, color, showOnTop FROM issuetype ORDER BY name ASC", []);
             echo json_encode(["success" => true, "result" => $tbl]);
         }
 

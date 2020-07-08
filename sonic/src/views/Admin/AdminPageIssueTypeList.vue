@@ -32,6 +32,7 @@
                                             <div style="margin-top:20px">
                                                 <a external nofollow noopener noreferrer href="https://materialdesignicons.com/">Icon Reference</a>
                                             </div>
+                                            <v-switch v-model="editTarget.showOnTop" label="Ongoing Issue Type" />
                                         </v-col>
                                         <v-col cols="6">
                                             <v-color-picker canvas-height="100" v-model="editTarget.color" hide-mode-switch mode="hexa" />
@@ -67,8 +68,8 @@
             return {
                 search: "",
                 dialog: false,
-                defaultItem: { id: 0, name: "", icon: "", color: "#FF0000" },
-                editTarget: { id: 0, name: "", icon: "", color: "#FF0000" },
+                defaultItem: { id: 0, name: "", icon: "", color: "#FF0000", showOnTop: false },
+                editTarget: { id: 0, name: "", icon: "", color: "#FF0000", showOnTop: false },
                 editIdx: -1,
                 headers: [
                     { text: "Issue Type", value: "name" },

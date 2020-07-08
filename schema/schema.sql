@@ -86,7 +86,8 @@ CREATE TABLE `issuetype` (
   `id` int(11) NOT NULL,
   `name` varchar(45) NOT NULL,
   `icon` varchar(45) NOT NULL,
-  `color` varchar(15) NOT NULL
+  `color` varchar(15) NOT NULL,
+  `showOnTop` boolean NOT NULL DEFAULT FALSE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

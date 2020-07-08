@@ -62,9 +62,11 @@
         // Issue Types
         public function SaveIssueType($it) {
             if($it->id === 0) {
-                $it->id = $this->sql->InsertAndReturnID("INSERT INTO issuetype (name, icon, color) VALUES (:n, :i, :c)", ["n" => $it->name, "i" => $it->icon, "c" => $it->color]);
+                $it->id = $this->sql->InsertAndReturnID("INSERT INTO issuetype (name, icon, color, showOnTop) VALUES (:n, :i, :c, :s)", 
+                                                        ["n" => $it->name, "i" => $it->icon, "c" => $it->color, "s" => $it->showOnTop]);
             } else {
-                $this->sql->ExecuteNonQuery("UPDATE issuetype SET name = :n, icon = :i, color = :c WHERE id = :id", ["n" => $it->name, "i" => $it->icon, "c" => $it->color, "id" => $it->id]);
+                $this->sql->ExecuteNonQuery("UPDATE issuetype SET name = :n, icon = :i, color = :c showOnTop = :s WHERE id = :id", 
+                                                        ["n" => $it->name, "i" => $it->icon, "c" => $it->color, "s" => $it->showOnTop, "id" => $it->id]);
             }
             echo json_encode(["success" => true, "result" => $it->id]);
         }

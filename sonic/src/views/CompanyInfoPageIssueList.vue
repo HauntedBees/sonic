@@ -6,8 +6,34 @@
                 <span class="beelink" @click="GiveDetails()">here</span> to submit some feedback!
             </v-col>
         </v-row>
-        <v-list color="#00000000" v-if="issues.length > 0" two-line subheader>
-            <BeeIssue v-for="item in issues" :item="item" :key="item.id" :companyId="companyId" :companyName="companyName" :namePaths="namePaths" />
+        <div class="text-center" style="margin-bottom:10px">
+            <v-tooltip top v-for="item in topIssues" :key="item.id">
+                <template v-slot:activator="{on, attrs}">
+                    <a 
+                        :href="item.sourceurl"
+                        style="text-decoration:none"
+                        external
+                        nofollow
+                        noopener
+                        noreferrer
+                        target="_blank">
+                        <v-chip
+                            v-bind="attrs"
+                            v-on="on"
+                            dark
+                            class="selectionchip"
+                            style="margin:5px;cursor:pointer"
+                            >
+                            <v-icon :color="item.issueColor">mdi-{{item.issueIcon}}</v-icon>
+                        </v-chip>
+                    </a>
+                </template>
+                <span>{{item.issueType}}</span>
+            </v-tooltip>
+
+        </div>
+        <v-list color="#00000000" v-if="standardIssues.length > 0" two-line subheader>
+            <BeeIssue v-for="item in standardIssues" :item="item" :key="item.id" :companyId="companyId" :companyName="companyName" :namePaths="namePaths" />
         </v-list>
     </div>
 </template>
@@ -34,6 +60,14 @@
         },
         watch: {
             companyId(val) { val && this.LoadIssues(); }
+        },
+        computed: {
+            topIssues() {
+                return this.issues.filter(e => e.ongoing && e.showOnTop);
+            },
+            standardIssues() {
+                return this.issues.filter(e => !e.ongoing || !e.showOnTop);
+            }
         },
         created() { this.LoadIssues(); },
         methods: {
