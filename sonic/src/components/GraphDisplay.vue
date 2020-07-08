@@ -27,10 +27,6 @@
         methods: {
             InitGraph() {
                 const me = performance.now();
-                const GetSize = e => {
-                    const size = e.data("size");
-                    return (30 + 5 * size) + "px";
-                };
                 if(!alreadyInitialized) {
                     try {
                         cytoscape.use(popper);
@@ -40,49 +36,21 @@
                     alreadyInitialized = true;
                 }
 
-                const cy = cytoscape({
-                    container: document.getElementsByClassName("loadedgraph"),
-                    elements: {
-                        nodes: this.nodes.map(e => ({ data: e })),
-                        edges: this.links.map(e => ({ data: e }))
-                    },
-                    layout: { name: "cose", animate: false },
-                    style: [
-                        {
-                            selector: "node[name]",
-                            style: {
-                                "content": e => isNaN(e.data("iconx")) ? e.data("label") : "",
-                                "background-image": GetLogo,
-                                "background-width": "100%",
-                                "background-height": "100%",
-                                "width": GetSize,
-                                "height": GetSize,
-                                "text-valign": "center",
-                                "text-halign": "center",
-                                "border-width": e => e.data("selected") ? "2px" : "3px",
-                                "border-style": "solid",
-                                "border-color": e => e.data("selected") ? "#22E546" : "#E7E721",
-                                "border-opacity": 1,
-                                "background-color": "#FFFFFF",
-                                "font-family": "Nevis",
-                                "font-size": "18px",
-                                "color": "#000000",
-                                "text-outline-color": "#115511",
-                                "text-outline-width": "1px",
-                                "text-outline-opacity": 0.5,
-                                "text-margin-y": "1px"
-                            }
-                        }, {
-                            selector: "edge",
-                            style: {
-                                "curve-style": "straight",
-                                "target-arrow-shape": "triangle",
-                                "target-arrow-color": "#E7E700",
-                                "line-color": "#E7E700"
-                            }
-                        }
-                    ]
-                });
+                const cy = this.GetCytoscapeObj(
+                                document.getElementsByClassName("loadedgraph"),
+                                { name: "cose", animate: false },
+                                {
+                                    "border-color": e => e.data("selected") ? "#22E546" : "#E7E721",
+                                    "border-width": e => e.data("selected") ? "2px" : "3px",
+                                    "color": "#000000",
+                                    "font-size": "18px",
+                                    "text-outline-color": "#115511",
+                                    "text-valign": "center",
+                                    "text-outline-opacity": 0.5,
+                                    "text-margin-y": "1px",
+                                    "content": e => isNaN(e.data("iconx")) ? e.data("label") : ""
+                                }
+                );
                 cy.on("mouseover", "node", ShowTooltip);
                 cy.on("tapstart", "node", ShowTooltip);
                 cy.on("tapend", "node", ShowTooltip);
@@ -98,53 +66,21 @@
                 console.log("Time: " + (performance.now() - me));
             },
             RenderMap() {
-                const GetSize = e => {
-                    const size = e.data("size");
-                    return (30 + 5 * size) + "px";
-                };
-                const cy = cytoscape({
-                    container: document.getElementsByClassName("renderGraph"),
-                    elements: {
-                        nodes: this.nodes.map(e => ({ data: e })),
-                        edges: this.links.map(e => ({ data: e }))
-                    },
-                    layout: { name: "cose", animate: false },
-                    style: [
-                        {
-                            selector: "node[name]",
-                            style: {
-                                "label": e => e.data("name"),
-                                "text-valign": "bottom",
-                                "text-halign": "center",
-                                "text-wrap": "wrap",
-                                "text-max-width": 160,
-                                "font-size": "12px",
-                                "background-image": GetLogo,
-                                "background-width": "100%",
-                                "background-height": "100%",
-                                "width": GetSize,
-                                "height": GetSize,
-                                "border-width": "3px",
-                                "border-style": "solid",
-                                "border-color": "#E7E721",
-                                "border-opacity": 1,
-                                "background-color": "#FFFFFF",
-                                "font-family": "Nevis",
-                                "color": "#FFFFFF",
-                                "text-outline-color": "#F90018",
-                                "text-outline-width": "1px"
-                            }
-                        }, {
-                            selector: "edge",
-                            style: {
-                                "curve-style": "straight",
-                                "target-arrow-shape": "triangle",
-                                "target-arrow-color": "#E7E700",
-                                "line-color": "#E7E700"
-                            }
-                        }
-                    ]
-                });
+                const cy = this.GetCytoscapeObj(
+                                document.getElementsByClassName("renderGraph"),
+                                { name: "cose", animate: false, nodeDimensionsIncludeLabels: true },
+                                {
+                                    "border-color": "#E7E721",
+                                    "border-width": "3px",
+                                    "color": "#FFFFFF",
+                                    "font-size": "18px",
+                                    "text-outline-color": "#F90018",
+                                    "text-valign": "bottom",
+                                    "text-wrap": "wrap",
+                                    "text-max-width": 160,
+                                    "label": e => e.data("name")
+                                }
+                );
                 const canv = document.createElement("canvas");
                 canv.width = 1000;
                 canv.height = 1000;
@@ -162,7 +98,7 @@
                     ctx.fillText(str, 6, 24);
                     ctx.font = "16px Nevis";
                     ctx.textAlign = "right";
-                    const credit = `Up to date as of ${date.toLocaleDateString()} from https://hauntedbees.com/sonic.html`;
+                    const credit = `Up to date as of ${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} from https://hauntedbees.com/sonic.html`;
                     ctx.strokeText(credit, 996, 994);
                     ctx.fillText(credit, 996, 994);
                     canv.toBlob(b => {
@@ -170,11 +106,53 @@
                     });
                 };
                 graphImg.src = cy.png({ bg: "#000048", maxWidth: 1000, maxHeight: 1000 });
+            },
+            GetCytoscapeObj(container, layout, nodeStyle) {
+                const GetSize = e => {
+                    const size = e.data("size");
+                    return (30 + 5 * size) + "px";
+                };
+                const fullNodeStyle = Object.assign({
+                    "background-image": GetLogo,
+                    "background-width": "100%",
+                    "background-height": "100%",
+                    "width": GetSize,
+                    "height": GetSize,
+                    "border-style": "solid",
+                    "border-opacity": 1,
+                    "background-color": "#FFFFFF",
+                    "font-family": "Nevis",
+                    "text-halign": "center",
+                    "text-outline-width": "1px"
+                }, nodeStyle);
+                return cytoscape({
+                    container: container,
+                    elements: {
+                        nodes: this.nodes.map(e => ({ data: e })),
+                        edges: this.links.map(e => ({ data: e }))
+                    },
+                    layout: layout,
+                    style: [
+                        {
+                            selector: "node[name]",
+                            style: fullNodeStyle
+                        }, {
+                            selector: "edge",
+                            style: {
+                                "curve-style": "straight",
+                                "target-arrow-shape": "triangle",
+                                "target-arrow-color": "#E7E700",
+                                "line-color": "#E7E700"
+                            }
+                        }
+                    ]
+                });
             }
         }
     }
     let tip = null;
     let alreadyInitialized = false;
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const iconImg = new Image();
     const savedLogos = {};
     function GetLogo(e) {
