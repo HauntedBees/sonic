@@ -4,12 +4,12 @@
         <v-app-bar app color="#2141C6" dark>
             <div class="d-flex align-center font-weight-bold">
                 <router-link to="/" class="text-decoration-none" style="color:white">
-                    <span class="d-flex d-sm-none">Sonic</span>
                     <span v-if="$store.state.auth && $route.path.indexOf('/admin') >= 0" class="d-none d-sm-flex">Sonic Admin View ({{$store.state.username}})</span>
                     <span v-if="!$store.state.auth || $route.path.indexOf('/admin') < 0" class="d-none d-sm-flex">Sonic - The Unethical Consumption Database</span>
                 </router-link>
-                <v-icon class="d-flex d-sm-none" v-if="!showSearch" style="margin-left:20px" @click="ShowSearchBox()">mdi-magnify</v-icon>
-                <CompanyAutocomplete ref="mobilesearch" class="d-flex d-sm-none" v-show="showSearch" @select="Select" addtl-style="width: 260px" />
+                <v-icon class="d-flex d-sm-none" v-if="!showSearch" @click="ShowSearchBox()">mdi-magnify</v-icon>
+                <v-icon class="d-flex d-sm-none" v-if="showSearch" @click="showSearch=false">mdi-close</v-icon>
+                <CompanyAutocomplete v-show="showSearch" ref="mobilesearch" :class="{'d-flex':showSearch, 'd-sm-none':showSearch}" @select="Select" addtl-style="width: 260px" />
                 <CompanyAutocomplete class="d-none d-sm-flex" @select="Select" addtl-style="width: 400px" />
             </div>
             <v-spacer/>
@@ -31,10 +31,6 @@
                     <FeedbackForm :issueID="issueId" :page="$route.path" modal @close="CloseFeedback" />
                 </v-card>
             </v-dialog>
-            <!--<v-btn text to="/login" v-if="!$store.state.auth">
-                <span class="mr-2">Log In</span>
-                <v-icon>mdi-keyboard-return</v-icon>
-            </v-btn>-->
             <v-btn text to="/admin/company" v-if="$store.state.auth && $route.path.indexOf('/admin') < 0">
                 <v-icon>mdi-account-cog</v-icon>
             </v-btn>
@@ -84,8 +80,6 @@
             ShowSearchBox() {
                 this.showSearch = true;
                 this.$refs.mobilesearch.Focus();
-                //console.log(this.$refs["searchBox"]);
-                //this.$refs.searchBox.Focus();
             }
         }
     };
