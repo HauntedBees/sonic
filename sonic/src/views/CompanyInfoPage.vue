@@ -123,7 +123,7 @@
             compChildren() { return this.entry.children.slice(0, 2); }
         },
         beforeRouteEnter(to, from, next) {
-            bee.get("FindCompany", to.params.id, data => {
+            bee.get("FindCompany", encodeURIComponent(to.params.id), data => {
                 next(vm => {
                     vm.entry = data.result;
                     vm.parentInfo = data.parentVals;
@@ -148,7 +148,7 @@
             this.notFound = false;
             this.links = [];
             this.nodes = [];
-            bee.get("FindCompany", to.params.id, data => {
+            bee.get("FindCompany", encodeURIComponent(to.params.id), data => {
                 this.entry = data.result;
                 this.parentInfo = data.parentVals;
                 next();
