@@ -113,6 +113,7 @@
             <v-col cols="4">
                 <SaveButton @save="Save" />
                 <v-btn class="ma-2" @click="Clear">Clear</v-btn>
+                <v-btn class="ma-2" @click="ClearPartial">Partial Clear</v-btn>
                 <v-btn class="ma-2" to="/admin/company">Back</v-btn>
             </v-col>
         </v-row>
@@ -224,6 +225,26 @@
                     type: 0,
                     newtype: "",
                     parents: [], 
+                    investors: [], 
+                    miscrelationships: [], 
+                    synonyms: []
+                };
+                this.$refs.form.resetValidation();
+            },
+            ClearPartial() {
+                const currentIconX = this.company.iconx;
+                const currentIconY = this.company.icony;
+                const currentCategory = this.company.type;
+                const currentParents = this.company.parents;
+                this.company = {
+                    id: 0,
+                    iconx: currentIconX,
+                    icony: currentIconY,
+                    name: "",
+                    description: "",
+                    type: currentCategory,
+                    newtype: "",
+                    parents: currentParents, 
                     investors: [], 
                     miscrelationships: [], 
                     synonyms: []
