@@ -1,6 +1,6 @@
 <template>
     <v-container style="background-color:#FFDA0C; padding:20px; border-radius: 20px">
-        <h2 style="margin-bottom:20px">Sonic v0.67</h2>
+        <h2 style="margin-bottom:20px">Sonic v0.68 [2020JUL11]</h2>
         <p>
         This site was written by <a external nofollow noopener noreferrer href="https://www.hauntedbees.com/" target="_blank">Sean Finch</a>, using the
         <a external nofollow noopener noreferrer href="https://vuejs.org/" target="_blank">Vue.js</a> framework. The code is licensed under the
@@ -31,7 +31,7 @@
         All trademarked and copyrighted company logos belong to their respective owners and are used for informational purposes only. The font 
         <a external nofollow noopener noreferrer href="http://tenbytwenty.com/#nevis" target="_blank">Nevis</a> was created by <a external nofollow noopener noreferrer href="http://edmerritt.com/" target="_blank">Ed Merritt</a>
         and is used under the <a href="http://scripts.sil.org/cms/scripts/page.php?item_id=OFL_web" target="_blank">SIL Open Font Licence</a>. 
-        <a external nofollow noopener noreferrerhref="https://materialdesignicons.com/" target="_blank">Material Design Icons</a> are licensed under the SIL Open Font License and 
+        <a external nofollow noopener noreferrer href="https://materialdesignicons.com/" target="_blank">Material Design Icons</a> are licensed under the SIL Open Font License and 
         <a external nofollow noopener noreferrer href="https://github.com/google/material-design-icons/blob/master/LICENSE" target="_blank">Apache License</a>.
         </p>
         <p>
