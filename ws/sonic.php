@@ -300,9 +300,9 @@
             ORDER BY depth ASC", ["i" => $obj["id"]]);
             $parentVals = [];
             $obj["parents"] = [];
-            // TODO: these two
-            $obj["investors"] = [];
-            $obj["miscrelationships"] = [];
+            $obj["hasAddtlRelationships"] = 0 < $this->sql->GetIntValue("
+            SELECT COUNT(*) FROM relationships WHERE relationtype > 1 AND (child = :i OR parent = :i) 
+            ", ["i" => $obj["id"]]);
             foreach($parents as $k=>$v) {
                 $id = intval($v["id"]);
                 $depth = intval($v["depth"]);
@@ -371,7 +371,7 @@
             } else {
                 $params = [];
                 $pos = strpos($_SERVER["QUERY_STRING"], "&");
-                if($pos !== false) { $params = explode("/", urldecode(substr($_SERVER["QUERY_STRING"], $pos + 1))); }
+                if($pos !== false) { $params = explode("/", urldecode(substr(str_replace("+", "%2B", $_SERVER["QUERY_STRING"]), $pos + 1))); }
                 call_user_func_array($m, $params);
             }
             return;
