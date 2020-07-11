@@ -141,6 +141,7 @@
         },
         beforeRouteUpdate(to, from, next) {
             this.entry = null;
+            this.showAdditional = false;
             this.error = 0;
             this.showGraph = false;
             this.showFullChildren = false;
