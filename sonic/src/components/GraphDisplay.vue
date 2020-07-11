@@ -29,8 +29,6 @@
             dataNodes: [],
             dataLinks: []
         }),
-        mounted() {
-        },
         watch: {
             ready() {
                 this.fullyLoaded = false;
@@ -40,20 +38,25 @@
         },
         methods: {
             BeginLoad() {
-                iconImg.src = require("src/assets/icons.png");
-                iconImg.onload = () => this.InitGraph();
                 this.dataNodes = this.nodes.map(e => ({ data: e }));
                 this.dataLinks = this.links.map(e => ({ data: e }));
+                if(window.iconImg === null) {
+                    window.iconImg = new Image();
+                    window.iconImg.src = require("src/assets/icons.png");
+                    window.iconImg.onload = () => this.InitGraph();
+                } else {
+                    this.InitGraph();
+                }
             },
             InitGraph() {
                 const me = performance.now();
-                if(!alreadyInitialized) {
+                if(!window.alreadyInitialized) {
                     try {
                         cytoscape.use(popper);
                     } catch { // TODO: figure out a way to not reinitialize it every time
                         console.log("it did the thing bt we good");
                     }
-                    alreadyInitialized = true;
+                    window.alreadyInitialized = true;
                 }
 
                 const cy = this.GetCytoscapeObj(
@@ -173,10 +176,10 @@
         }
     }
     let tip = null;
-    let alreadyInitialized = false;
+    window.alreadyInitialized = false;
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const iconImg = new Image();
-    const savedLogos = {};
+    window.iconImg = null;
+    window.savedLogos = {};
     function GetEdgeColor(e) {
         switch(e.data("relationtype")) {
             case "1": return "#E7E700";
@@ -189,12 +192,12 @@
         const iconx = e.data("iconx"), icony = e.data("icony");
         if(isNaN(iconx) || isNaN(icony)) { return "none"; }
         const coords = `${iconx},${icony}`;
-        if(savedLogos[coords]) { return savedLogos[coords]; }
+        if(window.savedLogos[coords]) { return window.savedLogos[coords]; }
         const c = document.createElement("canvas");
         c.width = 32; c.height = 32;
-        c.getContext("2d").drawImage(iconImg, 32 * iconx, 32 * icony, 32, 32, 0, 0, 32, 32);
+        c.getContext("2d").drawImage(window.iconImg, 32 * iconx, 32 * icony, 32, 32, 0, 0, 32, 32);
         const uri = c.toDataURL("image/png");
-        savedLogos[coords] = uri;
+        window.savedLogos[coords] = uri;
         return uri;
     }
     function ShowTooltip(e) {
