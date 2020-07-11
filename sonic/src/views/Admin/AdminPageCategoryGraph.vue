@@ -28,7 +28,7 @@
                         selected: false,
                         iconx: NaN, 
                         icony: NaN,
-                        size: data.links.filter(e => e.source === n.id).length
+                        size: n.count
                     }));
                     this.links = data.links;
                     this.graphLoaded = true;

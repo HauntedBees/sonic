@@ -89,7 +89,12 @@
             echo json_encode(["success" => true, "result" => $tbl]);
         }
         public function GetFullCategoryGraphData() {
-            $nodes = $this->sql->GetDataTable("SELECT id, name, icon FROM category", []);
+            $nodes = $this->sql->GetDataTable("
+            SELECT c.id, c.icon, c.name, COUNT(DISTINCT e.id) count
+            FROM category c
+				LEFT JOIN entity e ON c.id = e.type
+			GROUP BY c.id, c.icon, c.name
+            ORDER BY c.name ASC", []);
             $links = $this->sql->GetDataTable("SELECT parent AS source, child AS target FROM categoryrelationships", []);
             echo json_encode(["success" => true, "nodes" => $nodes, "links" => $links]);
         }
