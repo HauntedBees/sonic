@@ -4,7 +4,12 @@
             <div class="renderGraph" style="width:1000px; height:1000px" />
         </div>
         <div class="graph loadedgraph" :style="{'width':big?'100%':'75%', 'height':big?'780px':'320px'}" />
-        <v-progress-circular v-show="!fullyLoaded" dark style="position:relative;left:47%;bottom:202px" color="#FFFFFF" size="64" width="4" indeterminate />
+        <div style="height:0px">
+            <v-progress-circular v-show="!fullyLoaded" dark style="position:relative;left:47%;bottom:202px" color="#FFFFFF" size="64" width="4" indeterminate />
+        </div>
+        <div v-if="!big" style="text-align:right; margin: 0 12%">
+            <v-btn @click="RenderMap" class="ma-2" dark color="blue darken-1">Download</v-btn>
+        </div>
     </div>
 </template>
 <script>
