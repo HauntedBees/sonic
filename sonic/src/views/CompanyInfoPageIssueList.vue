@@ -7,30 +7,7 @@
             </v-col>
         </v-row>
         <div class="text-center" style="margin-bottom:10px">
-            <v-tooltip top v-for="item in topIssues" :key="item.id">
-                <template v-slot:activator="{on, attrs}">
-                    <!--<a 
-                        :href="item.sourceurl"
-                        style="text-decoration:none"
-                        external
-                        nofollow
-                        noopener
-                        noreferrer
-                        target="_blank">-->
-                        <v-chip
-                            v-bind="attrs"
-                            v-on="on"
-                            dark
-                            class="selectionchip"
-                            style="margin:5px;cursor:pointer"
-                            >
-                            <v-icon :color="item.issueColor">mdi-{{item.issueIcon}}</v-icon>
-                        </v-chip>
-                    <!--</a>-->
-                </template>
-                <span>{{item.issueType}}</span>
-            </v-tooltip>
-
+            <BeeTopIssue v-for="item in topIssues" :key="item.id" :item="item" />
         </div>
         <v-list color="#00000000" v-if="standardIssues.length > 0" two-line subheader>
             <BeeIssue v-for="item in standardIssues" :item="item" :key="item.id" :companyId="companyId" :companyName="companyName" :namePaths="namePaths" />
@@ -65,14 +42,18 @@
             topIssues() {
                 const topIssues = {};
                 this.issues.forEach(e => {
-                    if(e.ongoing && e.showOnTop && topIssues[e.issueTypeId] === undefined) {
-                        topIssues[e.issueTypeId] = {
-                            id: e.id,
-                            issueColor: e.issueColor,
-                            issueType: e.issueType,
-                            issueIcon: e.issueIcon,
-                            sourceurl: [e.sourceurl]
-                        };
+                    if(e.ongoing && e.showOnTop) {
+                        if(topIssues[e.issueTypeId] === undefined) {
+                            topIssues[e.issueTypeId] = {
+                                id: e.id,
+                                issueColor: e.issueColor,
+                                issueType: e.issueType,
+                                issueIcon: e.issueIcon,
+                                sources: [e.sourceurl]
+                            };
+                        } else {
+                            topIssues[e.issueTypeId].sources.push(e.sourceurl);
+                        }
                     }
                 });
                 return topIssues;
