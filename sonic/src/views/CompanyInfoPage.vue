@@ -57,20 +57,22 @@
                 <PotentiallyBigList title="Parent of" :items="entry.children"/>
             </v-col>
         </v-row>
-        <v-row v-if="entry !== null && showAdditional" style="text-align:center">
-            <v-col v-if="$store.state.loading"></v-col>
-            <v-col v-if="entry.investments.length > 0">
+        <v-row v-if="showAdditional" style="text-align:center">
+            <v-col v-show="$store.state.loading">
+                <v-progress-circular dark color="#FFFFFF" size="64" width="4" indeterminate />
+            </v-col>
+            <v-col v-show="entry.investments.length > 0">
                 <PotentiallyBigList title="Investing in" :items="entry.investments"/>
             </v-col>
-            <v-col v-if="entry.investors.length > 0">
+            <v-col v-show="entry.investors.length > 0">
                 <PotentiallyBigList title="Invested in by" :items="entry.investors"/>
             </v-col>
-            <v-col v-if="entry.relationships.length > 0">
+            <v-col v-show="entry.relationships.length > 0">
                 <PotentiallyBigList title="Business relationship wuth" :items="entry.relationships"/>
             </v-col>
         </v-row>
         <v-row v-if="entry !== null">
-            <v-col v-if="!showAdditional" class="beesubmessage beelink beebar" style="text-align:center" @click="ShowAdditionalData">
+            <v-col v-if="!showAdditional && entry.hasAddtlRelationships" class="beesubmessage beelink beebar" style="text-align:center" @click="ShowAdditionalData">
                 <span>Show Additional Relationships</span>
             </v-col>
             <v-col class="beesubmessage beelink beebar" style="text-align:center">

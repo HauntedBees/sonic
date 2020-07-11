@@ -34,6 +34,12 @@ const store = new Vuex.Store({
             state.auth = false;
             state.username = "";
         },
+        startLoad(state) {
+            state.loading = true;
+        },
+        endLoad(state) {
+            state.loading = false;
+        },
         triggerError(state, msg) {
             state.showMessage = true;
             state.messageText = msg;

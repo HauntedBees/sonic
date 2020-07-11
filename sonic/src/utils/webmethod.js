@@ -26,7 +26,7 @@ class Beeliever {
         });
     }
     get(path, param, successCallback, failCallback, errorCallback, forceCredentials) {
-        if(store) { store.loading = true; }
+        if(store) { store.commit("startLoad"); }
         let paramStr = "/";
         if(param !== undefined) {
             if(typeof param === "object") {
@@ -40,25 +40,28 @@ class Beeliever {
             credentials: (forceCredentials || this.withCredentials) ? "same-origin" : "omit"
         }).then(this.handleResponse).then(data => {
             if(data.success) {
-                //setTimeout(() => successCallback(data), 1000);
+                /*setTimeout(() => {
+                    store.commit("endLoad");
+                    successCallback(data);
+                }, 10000);*/
                 successCallback(data);
             } else if(failCallback !== undefined) {
                 failCallback(data);
             } else if(store) {
                 store.commit("triggerError", data.result);
             }
-            if(store) { store.loading = false; }
+            if(store) { store.commit("endLoad"); }
         }).catch(error => {
             if(errorCallback !== undefined) {
                 errorCallback(error);
             } else if(store) {
                 store.commit("triggerError", error);
-                store.loading = false;
+                store.commit("endLoad");
             }
         });
     }
     post(path, obj, successCallback, forceCredentials) {
-        store.loading = true;
+        store.commit("startLoad");
         fetch(this.path + path + "/", {
             method: "POST",
             body: JSON.stringify(obj),
@@ -69,14 +72,14 @@ class Beeliever {
             } else {
                 store.commit("triggerError", data.result);
             }
-            store.loading = false;
+            store.commit("endLoad");
         }).catch(error => {
             store.commit("triggerError", error);
-            store.loading = false;
+            store.commit("endLoad");
         });
     }
     delete(path, param, successCallback) {
-        store.loading = true;
+        store.commit("startLoad");
         fetch(this.path + path  + "/" + (param ? param : ""), {
             method: "DELETE",
             credentials: this.withCredentials ? "same-origin" : "omit"
@@ -86,10 +89,10 @@ class Beeliever {
             } else {
                 store.commit("triggerError", data.result);
             }
-            store.loading = false;
+            store.commit("endLoad");
         }).catch(error => {
             store.commit("triggerError", error);
-            store.loading = false;
+            store.commit("endLoad");
         });
     }
 }
