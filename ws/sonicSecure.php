@@ -132,6 +132,25 @@
             ORDER BY e.name ASC", []);
             echo json_encode(["success" => true, "result" => $tbl]);
         }
+        public function GetAdditionalCompanyInfo($id) {
+            $investors = $this->sql->GetDataTable("
+            SELECT DISTINCT e.name, e.id
+            FROM relationships r
+                INNER JOIN entity e ON r.parent = e.id
+            WHERE r.child = :id AND r.relationtype = 2
+            ORDER BY e.name ASC", ["id" => $id]);
+            $relationships = $this->sql->GetDataTable("
+            SELECT DISTINCT e.name, e.id
+            FROM relationships r
+                INNER JOIN entity e ON r.parent = e.id
+            WHERE r.parent = :id AND r.relationtype = 3
+            ORDER BY e.name ASC", ["id" => $id]);
+            echo json_encode([
+                "success" => true, 
+                "investors" => $investors, 
+                "relationships" => $relationships
+            ]);
+        }
         public function SaveCompany($company) {
             try {
                 $this->sql->BeginTransaction();

@@ -194,7 +194,26 @@
                     this.initCategory = this.categories[0].text;
                     this.company = data.result;
                     this.company.newtype = "";
+                    this.company.investors = [];
+                    this.company.miscrelationships = [];
                     this.showIcon = this.company.iconx !== null;
+                    beeSecure.get("GetAdditionalCompanyInfo", this.company.id, addtldata => {
+                        addtldata.investors.forEach(e => {
+                            this.parentItems.push({
+                                value: e.id,
+                                text: e.name
+                            });
+                        });
+                        addtldata.relationships.forEach(e => {
+                            this.parentItems.push({
+                                value: e.id,
+                                text: e.name
+                            });
+                        });
+                        this.company.investors = addtldata.investors.map(t => t.id);
+                        this.company.miscrelationships = addtldata.relationships.map(t => t.id);
+                    });
+                    
                 });
             },
             Clear() {
