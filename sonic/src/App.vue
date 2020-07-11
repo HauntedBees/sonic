@@ -10,7 +10,7 @@
                 <v-icon class="d-flex d-sm-none" v-if="!showSearch" @click="ShowSearchBox()">mdi-magnify</v-icon>
                 <v-icon class="d-flex d-sm-none" v-if="showSearch" @click="showSearch=false">mdi-close</v-icon>
                 <CompanyAutocomplete v-show="showSearch" ref="mobilesearch" :class="{'d-flex':showSearch, 'd-sm-none':showSearch}" @select="Select" addtl-style="width: 260px" />
-                <CompanyAutocomplete class="d-none d-sm-flex" @select="Select" addtl-style="width: 400px" />
+                <CompanyAutocomplete v-show="$route.path!=='/'" :class="{'d-none d-sm-flex': $route.path!=='/'}" @select="Select" addtl-style="width: 400px" />
             </div>
             <v-spacer/>
             <v-dialog v-model="feedbackModal" max-width="640px">
