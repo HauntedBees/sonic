@@ -20,7 +20,8 @@
         inject: ["triggerFeedback"],
         props: {
             "companyId": { type: Number, required: true },
-            "companyName": { type: String, required: true }
+            "companyName": { type: String, required: true },
+            "showAllRelationships": { type: Boolean, required: true }
         },
         data () {
             return {
@@ -36,7 +37,8 @@
             }
         },
         watch: {
-            companyId(val) { val && this.LoadIssues(); }
+            companyId(val) { val && this.LoadIssues(); },
+            showAllRelationships() { this.LoadIssues(); }
         },
         computed: {
             topIssues() {
@@ -65,7 +67,7 @@
         created() { this.LoadIssues(); },
         methods: {
             LoadIssues() {
-                bee.get("GetAllIssues", this.companyId, data => {
+                bee.get("GetAllIssues", [this.companyId, this.showAllRelationships], data => {
                     this.issues = data.result;
                     this.noIssues = this.issues.length === 0;
                     this.namePaths = [...new Set(this.issues.map(i=>i.namepath))];

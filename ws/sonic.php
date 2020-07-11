@@ -45,7 +45,9 @@
         }
 
         // Issues
-        public function GetAllIssues($company) {
+        public function GetAllIssues($company, $showOthers) {
+            $relationTypes = $showOthers === "true" ? [1, 2, 3] : [1];
+            $relSql = implode(", ", $relationTypes);
             $allIssues = $this->GetFullChain($company, "
             WITH RECURSIVE allentities AS (
                 SELECT e.id, e.name, e.name AS namepath
@@ -54,7 +56,7 @@
                 UNION ALL
                 SELECT e.id, e.name, CONCAT(a.namepath, '|', e.name) AS namepath
                 FROM allentities a
-                    INNER JOIN relationships r ON r.parent = a.id
+                    INNER JOIN relationships r ON r.parent = a.id AND r.relationtype IN ($relSql)
 					INNER JOIN entity e ON r.child = e.id
             )
             SELECT a.id AS entityId, a.name AS entityName,
@@ -73,7 +75,7 @@
 				WHEN i.ongoing = 1 THEN NOW()
                 WHEN i.enddate IS NOT NULL THEN i.enddate
                 ELSE i.startdate
-            END DESC");
+            END DESC", $relationTypes);
             foreach($allIssues as &$val) {
                 $val["entityId"] = intval($val["entityId"]);
                 $val["issueTypeId"] = intval($val["issueTypeId"]);

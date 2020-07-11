@@ -93,6 +93,7 @@
             <v-col cols="10">
                 <CompanyInfoPageIssueList
                     v-if="entry !== null"
+                    :showAllRelationships="showAdditional"
                     :company-name="entry.name"
                     :company-id="entry.id"
                     />
@@ -144,6 +145,7 @@
             this.showAdditional = false;
             this.error = 0;
             this.showGraph = false;
+            this.graphLoaded = false;
             this.showFullChildren = false;
             this.notFound = false;
             this.links = [];
