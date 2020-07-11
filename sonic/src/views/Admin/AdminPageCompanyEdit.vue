@@ -61,7 +61,7 @@
                   v-model="company.investors"
                   :loading="$store.state.loading"
                   :items="parentItems"
-                  :search-input.sync="searchParent"
+                  :search-input.sync="searchInvest"
                   clearable
                   cache-items
                   flat
@@ -76,7 +76,7 @@
                   v-model="company.miscrelationships"
                   :loading="$store.state.loading"
                   :items="parentItems"
-                  :search-input.sync="searchParent"
+                  :search-input.sync="searchMisc"
                   clearable
                   cache-items
                   flat
@@ -129,6 +129,8 @@
         data () {
             return {
                 searchParent: null, 
+                searchInvest: null, 
+                searchMisc: null, 
                 showNewCategory: false,
                 parentItems: [], 
                 initCategory: null,
@@ -159,6 +161,8 @@
         },
         watch: {
             searchParent(val) { val && this.QueryParent(val); },
+            searchInvest(val) { val && this.QueryParent(val); },
+            searchMisc(val) { val && this.QueryParent(val); },
             searchCategory(val) { val && val !== this.initCategory && this.QueryCategory(val); }
          },
         created() {

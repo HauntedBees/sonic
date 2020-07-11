@@ -48,41 +48,38 @@
                         <span v-if="key !== 0">, </span>
                         <router-link :to="`/`+parentInfo[item].text">{{parentInfo[item].text}}</router-link>
                         <span v-if="item !== parentInfo[item].rootid">
-                        (<router-link :to="`/`+parentInfo[item].rootname">{{parentInfo[item].rootname}}</router-link>)
+                            (<router-link :to="`/`+parentInfo[item].rootname">{{parentInfo[item].rootname}}</router-link>)
                         </span>
                     </span>
                 </div>
             </v-col>
             <v-col v-if="entry.children.length > 0">
-                <BeeSubheader text="Parent of" />
-                <div class="beesubmessage" v-if="entry.children.length < 4 || showFullChildren">
-                    <span v-for="(item, key) in entry.children" :key="key">
-                        <span v-if="key !== 0">, </span>
-                        <router-link :to="`/`+item.text">{{item.text}}</router-link>
-                    </span>
-                </div>
-                <div class="beesubmessage" v-if="entry.children.length >= 4 && !showFullChildren">
-                    <span v-for="(item, key) in compChildren" :key="key">
-                        <span v-if="key !== 0">, </span>
-                        <router-link :to="`/`+item.text">{{item.text}}</router-link>
-                    </span>,
-                    <span class="beelink" @click="showFullChildren=true">and {{entry.children.length - 2}} others</span>
-                </div>
+                <PotentiallyBigList title="Parent of" :items="entry.children"/>
+            </v-col>
+        </v-row>
+        <v-row v-if="entry !== null && showAdditional" style="text-align:center">
+            <v-col v-if="$store.state.loading"></v-col>
+            <v-col v-if="entry.investments.length > 0">
+                <PotentiallyBigList title="Investing in" :items="entry.investments"/>
+            </v-col>
+            <v-col v-if="entry.investors.length > 0">
+                <PotentiallyBigList title="Invested in by" :items="entry.investors"/>
+            </v-col>
+            <v-col v-if="entry.relationships.length > 0">
+                <PotentiallyBigList title="Business relationship wuth" :items="entry.relationships"/>
             </v-col>
         </v-row>
         <v-row v-if="entry !== null">
-            <v-col v-show="!showGraph && (entry.parents.length > 0 || entry.children.length > 0)" class="beesubmessage beelink beebar" style="text-align:center">
-                <span @click="ShowGraph">Show Graph</span>
+            <v-col v-if="!showAdditional" class="beesubmessage beelink beebar" style="text-align:center" @click="ShowAdditionalData">
+                <span>Show Additional Relationships</span>
             </v-col>
-            <v-col v-if="showGraph">
-                <div v-if="nodes.length===0" class="graph" style="width:75%; height: 360px">
-                    <v-progress-circular dark style="left:47%;top:144px" color="#FFFFFF" size="64" width="4" indeterminate />
-                </div>
-                <GraphDisplay v-if="nodes.length>0" :nodes="nodes" :links="links"/>
-                <div class="beesubmessage beelink beebar" style="text-align:center">
-                    <span @click="HideGraph">Hide Graph</span>
-                </div>
+            <v-col class="beesubmessage beelink beebar" style="text-align:center">
+                <span v-show="!showGraph && (entry.parents.length > 0 || entry.children.length > 0)" @click="ShowGraph">Show Graph</span>
+                <span v-show="showGraph" @click="HideGraph">Hide Graph</span>
             </v-col>
+        </v-row>
+        <v-row v-if="entry !== null && showGraph">
+            <v-col><GraphDisplay :ready="graphLoaded" :nodes="nodes" :links="links"/></v-col>
         </v-row>
         <!--<v-row v-if="entry.description">
             <v-col cols="12">
@@ -116,7 +113,9 @@
             showFullChildren: false,
             nodes: [],
             links: [],
-            notFound: false
+            graphLoaded: false,
+            notFound: false,
+            showAdditional: false
         }),
         computed: {
             compChildren() { return this.entry.children.slice(0, 2); }
@@ -160,11 +159,31 @@
             });
         },
         methods: {
-            HideGraph() { this.showGraph = false; },
+            ShowAdditionalData() {
+                this.entry.investments = [];
+                this.entry.investors = [];
+                this.entry.relationships = [];
+                this.showAdditional = true;
+                bee.get("GetAdditionalCompanyInfo", this.entry.id, data => {
+                    this.entry.investments = data.investments.map(t => ({text: t}));
+                    this.entry.investors = data.investors.map(t => ({text: t}));
+                    this.entry.relationships = data.relationships.map(t => ({text: t}));
+                    if(this.showGraph) {
+                        this.HideGraph();
+                        this.ShowGraph();
+                    }
+                });
+            },
+            HideGraph() {
+                this.nodes = [];
+                this.links = [];
+                this.showGraph = false;
+                this.graphLoaded = false;
+            },
             ShowGraph() {
                 this.showGraph = true;
                 if(this.nodes.length > 0) { return; }
-                bee.get("GetGraphData", this.entry.id, data => {
+                bee.get("GetGraphData", [this.entry.id, this.showAdditional], data => {
                     const nodeRef = {};
                     this.nodes = [];
                     this.links = [];
@@ -207,11 +226,10 @@
                             });
                         }
                     });
+                    this.graphLoaded = true;
                 });
             },
-            GiveDetails() {
-                this.triggerFeedback(-1);
-            }
+            GiveDetails() { this.triggerFeedback(-1); }
         }
     }
 </script>

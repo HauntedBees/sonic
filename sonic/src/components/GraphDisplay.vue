@@ -4,9 +4,7 @@
             <div class="renderGraph" style="width:1000px; height:1000px" />
         </div>
         <div class="graph loadedgraph" :style="{'width':big?'100%':'75%', 'height':big?'780px':'320px'}" />
-        <div v-if="!big" style="text-align:right; margin: 0 12%">
-            <v-btn @click="RenderMap" class="ma-2" dark color="blue darken-1">Download</v-btn>
-        </div>
+        <v-progress-circular v-show="!fullyLoaded" dark style="position:relative;left:47%;bottom:202px" color="#FFFFFF" size="64" width="4" indeterminate />
     </div>
 </template>
 <script>
@@ -16,15 +14,32 @@
     import { saveAs } from "file-saver";
     export default {
         props: {
+            "ready": { type:Boolean, required: true },
             "nodes": { type:Array, required: true },
             "links": { type:Array, required: true },
             "big": { type:Boolean }
         },
+        data: () => ({
+            fullyLoaded: false,
+            dataNodes: [],
+            dataLinks: []
+        }),
         mounted() {
-            iconImg.src = require("src/assets/icons.png");
-            iconImg.onload = () => this.InitGraph();
+        },
+        watch: {
+            ready() {
+                this.fullyLoaded = false;
+                if(!this.ready) { return; }
+                this.BeginLoad();
+            }
         },
         methods: {
+            BeginLoad() {
+                iconImg.src = require("src/assets/icons.png");
+                iconImg.onload = () => this.InitGraph();
+                this.dataNodes = this.nodes.map(e => ({ data: e }));
+                this.dataLinks = this.links.map(e => ({ data: e }));
+            },
             InitGraph() {
                 const me = performance.now();
                 if(!alreadyInitialized) {
@@ -64,6 +79,7 @@
                     this.$router.push(`/${path}`);
                 });
                 console.log("Time: " + (performance.now() - me));
+                this.fullyLoaded = true;
             },
             RenderMap() {
                 const cy = this.GetCytoscapeObj(
@@ -128,8 +144,8 @@
                 return cytoscape({
                     container: container,
                     elements: {
-                        nodes: this.nodes.map(e => ({ data: e })),
-                        edges: this.links.map(e => ({ data: e }))
+                        nodes: this.dataNodes,
+                        edges: this.dataLinks
                     },
                     layout: layout,
                     style: [
@@ -157,7 +173,6 @@
     const iconImg = new Image();
     const savedLogos = {};
     function GetEdgeColor(e) {
-        console.log(e.data("relationtype"));
         switch(e.data("relationtype")) {
             case "1": return "#E7E700";
             case "2": return "#00E513";

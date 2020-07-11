@@ -9,14 +9,14 @@
         <div class="text-center" style="margin-bottom:10px">
             <v-tooltip top v-for="item in topIssues" :key="item.id">
                 <template v-slot:activator="{on, attrs}">
-                    <a 
+                    <!--<a 
                         :href="item.sourceurl"
                         style="text-decoration:none"
                         external
                         nofollow
                         noopener
                         noreferrer
-                        target="_blank">
+                        target="_blank">-->
                         <v-chip
                             v-bind="attrs"
                             v-on="on"
@@ -26,7 +26,7 @@
                             >
                             <v-icon :color="item.issueColor">mdi-{{item.issueIcon}}</v-icon>
                         </v-chip>
-                    </a>
+                    <!--</a>-->
                 </template>
                 <span>{{item.issueType}}</span>
             </v-tooltip>
@@ -63,7 +63,19 @@
         },
         computed: {
             topIssues() {
-                return this.issues.filter(e => e.ongoing && e.showOnTop);
+                const topIssues = {};
+                this.issues.forEach(e => {
+                    if(e.ongoing && e.showOnTop && topIssues[e.issueTypeId] === undefined) {
+                        topIssues[e.issueTypeId] = {
+                            id: e.id,
+                            issueColor: e.issueColor,
+                            issueType: e.issueType,
+                            issueIcon: e.issueIcon,
+                            sourceurl: [e.sourceurl]
+                        };
+                    }
+                });
+                return topIssues;
             },
             standardIssues() {
                 return this.issues.filter(e => !e.ongoing || !e.showOnTop);

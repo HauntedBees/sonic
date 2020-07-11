@@ -21,7 +21,9 @@
         provide links to sources for every issue we track - we have no affiliation with any linked source websites and do not endorse them. 
         All external links are marked with <code>external</code>, <code>nofollow</code>, <code>noopener</code>, and <code>noreferrer</code>
         attributes to ensure that as little information as possible is transmitted to these websites. We do not send any data to these links,
-        so if you do not trust them, just don't click 'em.
+        so if you do not trust them, just don't click 'em. Please note that, while we try to find sources from websites that use HTTPS, some 
+        of the linked sources use standard HTTP. Websites transmitted over HTTP can be monitored by your ISP or other third parties. If you can 
+        find an HTTPS-enabled source for something that currently has an HTTP website, please let us know.
         </p>
     </v-container>
 </template>
