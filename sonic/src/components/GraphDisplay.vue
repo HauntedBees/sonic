@@ -61,13 +61,13 @@
 
                 const cy = this.GetCytoscapeObj(
                                 document.getElementsByClassName("loadedgraph"),
-                                { name: "cose", animate: false },
+                                { name: "cose", animate: false, nodeDimensionsIncludeLabels: true },
                                 {
                                     "border-color": e => e.data("selected") ? "#22E546" : "#E7E721",
                                     "border-width": e => e.data("selected") ? "2px" : "3px",
                                     "color": "#000000",
                                     "font-size": "18px",
-                                    "text-outline-color": "#115511",
+                                    "text-outline-color": "#FFFFFF",
                                     "text-valign": "center",
                                     "text-outline-opacity": 0.5,
                                     "text-margin-y": "1px",

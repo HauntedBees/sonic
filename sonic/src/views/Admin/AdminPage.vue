@@ -17,6 +17,7 @@
                     { title: "Company", icon: "mdi-domain", href: "/admin/company" },
                     { title: "Issue Types", icon: "mdi-alert-octagram", href: "/admin/issuetype" },
                     { title: "Category", icon: "mdi-shape", href: "/admin/category" },
+                    { title: "Category Graph", icon: "mdi-graph", href: "/admin/categorygraph" },
                     { title: "Feedback", icon: "mdi-comment-quote", href: "/admin/feedback" }
                 ]
             }

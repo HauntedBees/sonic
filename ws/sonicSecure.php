@@ -88,6 +88,12 @@
             WHERE child = :id", ["id" => $catID], "parent");
             echo json_encode(["success" => true, "result" => $tbl]);
         }
+        public function GetFullCategoryGraphData() {
+            $nodes = $this->sql->GetDataTable("SELECT id, name, icon FROM category", []);
+            $links = $this->sql->GetDataTable("SELECT parent AS source, child AS target FROM categoryrelationships", []);
+            echo json_encode(["success" => true, "nodes" => $nodes, "links" => $links]);
+        }
+        
         public function SearchCategories($query) {
             $tbl = $this->sql->GetDataTable("
             SELECT id, name

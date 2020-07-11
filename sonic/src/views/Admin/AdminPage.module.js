@@ -3,6 +3,7 @@ import AdminPageCompanyEdit from "src/views/Admin/AdminPageCompanyEdit";
 import AdminPageCompanyList from "src/views/Admin/AdminPageCompanyList";
 import AdminPageIssueTypeList from "src/views/Admin/AdminPageIssueTypeList";
 import AdminPageCategoryList from "src/views/Admin/AdminPageCategoryList";
+import AdminPageCategoryGraph from "src/views/Admin/AdminPageCategoryGraph";
 import AdminPageFeedbackList from "src/views/Admin/AdminPageFeedbackList";
 export default { 
     path: "/admin", component: AdminPage,
@@ -33,6 +34,13 @@ export default {
             component: AdminPageCategoryList,
             meta: {
                 title: "SonicAdmin - Manage Categories"
+            }
+        },
+        {
+            path: "categorygraph", 
+            component: AdminPageCategoryGraph,
+            meta: {
+                title: "SonicAdmin - Category Graph"
             }
         },
         {
