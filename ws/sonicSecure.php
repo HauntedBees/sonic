@@ -65,7 +65,7 @@
                 $it->id = $this->sql->InsertAndReturnID("INSERT INTO issuetype (name, icon, color, showOnTop) VALUES (:n, :i, :c, :s)", 
                                                         ["n" => $it->name, "i" => $it->icon, "c" => $it->color, "s" => $it->showOnTop]);
             } else {
-                $this->sql->ExecuteNonQuery("UPDATE issuetype SET name = :n, icon = :i, color = :c showOnTop = :s WHERE id = :id", 
+                $this->sql->ExecuteNonQuery("UPDATE issuetype SET name = :n, icon = :i, color = :c, showOnTop = :s WHERE id = :id", 
                                                         ["n" => $it->name, "i" => $it->icon, "c" => $it->color, "s" => $it->showOnTop, "id" => $it->id]);
             }
             echo json_encode(["success" => true, "result" => $it->id]);
