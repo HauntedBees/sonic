@@ -251,7 +251,9 @@
             SELECT DISTINCT e.name
             FROM relationships r
                 INNER JOIN entity e ON r.child = e.id OR r.parent = e.id
-            WHERE r.parent = :id AND r.relationtype = 3
+            WHERE (r.parent = :id OR r.child = :id)
+                AND r.relationtype = 3
+                AND e.id <> :id
             ORDER BY e.name ASC", ["id" => $id], "name");
             echo json_encode([
                 "success" => true, 
