@@ -42,10 +42,7 @@
                         target="_blank"
                         style="text-decoration:none"
                         :href = "item.sourceurl"
-                        external
-                        nofollow
-                        noopener
-                        noreferrer
+                        rel = "external nofollow noopener noreferrer"
                         >
                         <v-icon color="blue darken-2" v-bind="attrs" v-on="on">mdi-link-box-variant</v-icon>
                     </a>

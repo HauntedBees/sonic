@@ -21,10 +21,7 @@
                         <a
                             v-bind="attrs"
                             v-on="on"
-                            external
-                            nofollow
-                            noopener
-                            noreferrer
+                            rel="external nofollow noopener noreferrer"
                             :href="'https://duckduckgo.com/?iar=news&q=%22'+encodeURIComponent(entry.name) + '%22'"
                             target="_blank"
                             class="viewNews"

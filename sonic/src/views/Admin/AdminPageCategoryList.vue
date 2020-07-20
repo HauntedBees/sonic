@@ -25,7 +25,7 @@
                                                 <v-icon>mdi-{{editTarget.icon}}</v-icon>
                                             </div>
                                             <div style="margin-top:20px">
-                                                <a external nofollow noopener noreferrer href="https://materialdesignicons.com/">Icon Reference</a>
+                                                <a rel="external nofollow noopener noreferrer" href="https://materialdesignicons.com/">Icon Reference</a>
                                             </div>
                                         </v-col>
                                         <v-col cols="8">
