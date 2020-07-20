@@ -5,7 +5,19 @@
         </div>
         <div class="graph loadedgraph" :style="{'width':big?'100%':'75%', 'height':big?'780px':'320px'}" />
         <div style="height:0px">
-            <v-progress-circular v-show="!fullyLoaded" dark style="position:relative;left:47%;bottom:202px" color="#FFFFFF" size="64" width="4" indeterminate />
+            <v-progress-circular
+                v-show="!fullyLoaded"
+                dark
+                :style="{position:'relative', left: '47%', bottom: big?'502px':'202px' }"
+                color="#FFFFFF"
+                size="64"
+                width="4" 
+                indeterminate />
+        </div>
+        <div class="beesubmessage beebar"
+            v-show="big&&!fullyLoaded"
+            style="text-align:center; bottom: 602px">
+            This may take a moment to load...
         </div>
         <div v-if="!big" style="text-align:right; margin: 0 12%">
             <v-btn @click="RenderMap" class="ma-2" dark color="blue darken-1">Download</v-btn>
