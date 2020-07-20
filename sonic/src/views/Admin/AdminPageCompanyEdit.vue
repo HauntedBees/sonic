@@ -254,6 +254,7 @@
             Save() {
                 const res = this.$refs.form.validate();
                 if(!res) { return; }
+                this.company.name = this.company.name.trim();
                 this.company.parents = this.company.parents.map(e => parseInt(e));
                 if(this.showIcon) {
                     this.company.iconx = parseInt(this.company.iconx);
