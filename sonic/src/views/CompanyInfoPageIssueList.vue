@@ -7,10 +7,10 @@
             </v-col>
         </v-row>
         <div class="text-center" style="margin-bottom:10px">
-            <BeeTopIssue v-for="item in topIssues" :key="item.id" :item="item" />
+            <BeeTopIssue v-for="(item, idx) in topIssues" :key="idx" :item="item" />
         </div>
         <v-list color="#00000000" v-if="standardIssues.length > 0" two-line subheader>
-            <BeeIssue v-for="item in standardIssues" :item="item" :key="item.id" :companyId="companyId" :companyName="companyName" :namePaths="namePaths" />
+            <BeeIssue v-for="(item, idx) in standardIssues" :item="item" :key="idx" :companyId="companyId" :companyName="companyName" :namePaths="namePaths" />
         </v-list>
     </div>
 </template>
@@ -67,6 +67,7 @@
         created() { this.LoadIssues(); },
         methods: {
             LoadIssues() {
+                this.issues = [];
                 bee.get("GetAllIssues", [this.companyId, this.showAllRelationships], data => {
                     this.issues = data.result;
                     this.noIssues = this.issues.length === 0;
