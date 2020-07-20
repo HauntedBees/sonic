@@ -7,9 +7,16 @@
                     <span v-if="$store.state.auth && $route.path.indexOf('/admin') >= 0" class="d-none d-sm-flex">Sonic Admin View ({{$store.state.username}})</span>
                     <span v-if="!$store.state.auth || $route.path.indexOf('/admin') < 0" class="d-none d-sm-flex">Sonic - The Unethical Consumption Database</span>
                 </router-link>
-                <v-icon class="d-flex d-sm-none" v-if="!showSearch" @click="ShowSearchBox()">mdi-magnify</v-icon>
-                <v-icon class="d-flex d-sm-none" v-if="showSearch" @click="showSearch=false">mdi-close</v-icon>
-                <CompanyAutocomplete v-show="showSearch" ref="mobilesearch" :class="{'d-flex':showSearch, 'd-sm-none':showSearch}" @select="Select" addtl-style="width: 260px" />
+                <router-link
+                    to="/"
+                    class="d-flex d-sm-none beesubheader"
+                    style="margin-top:7px;margin-right:5px;color:#FFFFFF;text-decoration:none">
+                        <span>S</span>
+                        <i/>
+                </router-link>
+                <v-icon class="d-flex d-sm-none" v-if="$route.path!=='/'&&!showSearch" @click="ShowSearchBox()">mdi-magnify</v-icon>
+                <v-icon class="d-flex d-sm-none" v-if="$route.path!=='/'&&showSearch" @click="showSearch=false">mdi-close</v-icon>
+                <CompanyAutocomplete v-show="$route.path!=='/'&&showSearch" ref="mobilesearch" :class="{'d-flex':showSearch, 'd-sm-none':showSearch}" @select="Select" addtl-style="width: 260px" />
                 <CompanyAutocomplete v-show="$route.path!=='/'" :class="{'d-none d-sm-flex': $route.path!=='/'}" @select="Select" addtl-style="width: 400px" />
             </div>
             <v-spacer/>
