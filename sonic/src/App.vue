@@ -41,7 +41,7 @@
         <v-main>
             <router-view />
         </v-main>
-        <v-footer fixed color="#E7E700">
+        <v-footer fixed color="#FFDA0C">
             <v-spacer />
             <div>&copy; 2020<span v-if="currentYear>2020">-{{currentYear}}</span> <a href="https://www.hauntedbees.com">Haunted Bees Productions</a></div>
         </v-footer>
