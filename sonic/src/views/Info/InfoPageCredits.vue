@@ -1,6 +1,6 @@
 <template>
     <v-container style="background-color:#FFDA0C; padding:20px; border-radius: 20px">
-        <h2 style="margin-bottom:20px">Sonic v0.68 [2020JUL11]</h2>
+        <h2 style="margin-bottom:20px">Sonic v0.682 [2020JUL20]</h2>
         <p>
         This site was written by <a rel="external nofollow noopener noreferrer" href="https://www.hauntedbees.com/" target="_blank">Sean Finch</a>, using the
         <a rel="external nofollow noopener noreferrer" href="https://vuejs.org/" target="_blank">Vue.js</a> framework. The code is licensed under the
