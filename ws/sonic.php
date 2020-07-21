@@ -311,8 +311,20 @@
             $parentVals = [];
             $obj["parents"] = [];
             $obj["hasAddtlRelationships"] = 0 < $this->sql->GetIntValue("
-            SELECT COUNT(*) FROM relationships WHERE relationtype > 1 AND (child = :i OR parent = :i) 
-            ", ["i" => $obj["id"]]);
+            WITH RECURSIVE ancestor AS (
+                SELECT r.parent AS id, e.name, r.relationtype
+                FROM relationships r
+                    INNER JOIN entity e ON r.parent = e.id
+                WHERE r.child = :i
+                UNION ALL
+                SELECT ep.id, ep.name, r.relationtype
+                FROM ancestor a
+                    INNER JOIN relationships r ON r.child = a.id
+                    INNER JOIN entity ep ON r.parent = ep.id
+            )
+            SELECT COUNT(*)
+            FROM ancestor
+            WHERE relationtype <> 1", ["i" => $obj["id"]]);
             foreach($parents as $k=>$v) {
                 $id = intval($v["id"]);
                 $depth = intval($v["depth"]);
