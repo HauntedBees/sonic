@@ -73,6 +73,7 @@
         inject: ["triggerFeedback"],
         methods: {
             GetCompanyRelation(item) {
+                if(this.companyName === undefined) { return ""; }
                 const rel = GetRelationString(this.companyName, item.entityName);
                 return rel === "" ? "" : (rel + " - ");
             },
