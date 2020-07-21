@@ -191,6 +191,7 @@
     window.alreadyInitialized = false;
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     window.iconImg = null;
+    window.logoSplitterCtx = null;
     window.savedLogos = {};
     function GetEdgeColor(e) {
         switch(e.data("relationtype")) {
@@ -205,10 +206,15 @@
         if(isNaN(iconx) || isNaN(icony)) { return "none"; }
         const coords = `${iconx},${icony}`;
         if(window.savedLogos[coords]) { return window.savedLogos[coords]; }
-        const c = document.createElement("canvas");
-        c.width = 32; c.height = 32;
-        c.getContext("2d").drawImage(window.iconImg, 32 * iconx, 32 * icony, 32, 32, 0, 0, 32, 32);
-        const uri = c.toDataURL("image/png");
+        if(window.logoSplitterCtx === null) {
+            const c = document.createElement("canvas");
+            c.width = 32; c.height = 32;
+            window.logoSplitterCtx = c.getContext("2d");
+        } else {
+            window.logoSplitterCtx.clearRect(0, 0, 32, 32);
+        }
+        window.logoSplitterCtx.drawImage(window.iconImg, 32 * iconx, 32 * icony, 32, 32, 0, 0, 32, 32);
+        const uri = window.logoSplitterCtx.canvas.toDataURL("image/png");
         window.savedLogos[coords] = uri;
         return uri;
     }
