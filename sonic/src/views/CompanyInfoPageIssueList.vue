@@ -10,7 +10,7 @@
             <BeeTopIssue v-for="(item, idx) in topIssues" :key="idx" :item="item" />
         </div>
         <v-list color="#00000000" v-if="standardIssues.length > 0" two-line subheader>
-            <BeeIssue v-for="(item, idx) in standardIssues" :item="item" :key="idx" :companyId="companyId" :companyName="companyName" :namePaths="namePaths" />
+            <BeeIssue v-for="(item, idx) in standardIssues" :item="item" :key="idx" :companyId="companyId" :companyName="companyName" />
         </v-list>
     </div>
 </template>
@@ -31,7 +31,6 @@
                     { text: "Issue", value: "issue", sortable: "false" },
                     { text: "Source", value: "sourceurl", sortable: "false" }
                 ],
-                namePaths: [],
                 issues: [],
                 noIssues: false
             }
@@ -71,13 +70,57 @@
                 bee.get("GetAllIssues", [this.companyId, this.showAllRelationships], data => {
                     this.issues = data.result;
                     this.noIssues = this.issues.length === 0;
-                    this.namePaths = [...new Set(this.issues.map(i=>i.namepath))];
                     this.issues.forEach(e => e.ongoing = e.ongoing === "1");
+                    const namePaths = [...new Set(this.issues.map(i=>i.namepath))];
+                    namePaths.forEach(pathStr => {
+                        const pathsArr = pathStr.split("|");
+                        FillRelationships(pathsArr);
+                    });
                 });
             },
             GiveDetails() {
                 this.triggerFeedback(-1);
             }
         }
+    }
+    window.companyRelations = {};
+    function InitRelationship(entityName) {
+        if(window.companyRelations[entityName] === undefined) {
+            window.companyRelations[entityName] = {};
+        }
+        return window.companyRelations[entityName];
+    }
+    function FillRelationships(namePathArr, idx) {
+        idx = idx || 0;
+        if(idx === (namePathArr.length - 1)) { return; }
+        let me = namePathArr[idx];
+        if(me[0] === ">" || me[0] === "[") { me = me.substring(1); }
+        let child = namePathArr[idx + 1];
+        const childRelType = child[0];
+        let relationType = "std";
+        if(childRelType === ">") {
+            relationType = "inv";
+            child = child.substring(1);
+        } else if(childRelType === "[") {
+            relationType = "misc";
+            child = child.substring(1);
+        }
+        const meR = InitRelationship(me);
+        const childR = InitRelationship(child);
+        switch(relationType) {
+            case "std":
+                meR[child] = "c";
+                childR[me] = "p";
+                break;
+            case "inv":
+                meR[child] = "m";
+                childR[me] = "o";
+                break;
+            case "misc":
+                meR[child] = "x";
+                childR[me] = "x";
+            break;
+        }
+        FillRelationships(namePathArr, idx + 1);
     }
 </script>

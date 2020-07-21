@@ -54,7 +54,13 @@
                 FROM entity e
                 WHERE e.id IN (:keysStr)
                 UNION ALL
-                SELECT e.id, e.name, CONCAT(a.namepath, '|', e.name) AS namepath
+                SELECT e.id, e.name,
+                    CASE r.relationtype
+                        WHEN 1 THEN CONCAT(a.namepath, '|', e.name)
+                        WHEN 2 THEN CONCAT(a.namepath, '|>', e.name)
+                        WHEN 3 THEN CONCAT(a.namepath, '|[', e.name)
+                    END
+                    AS namepath
                 FROM allentities a
                     INNER JOIN relationships r ON r.parent = a.id AND r.relationtype IN ($relSql)
 					INNER JOIN entity e ON r.child = e.id
