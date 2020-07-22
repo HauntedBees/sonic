@@ -30,7 +30,7 @@
                                                 <v-icon>mdi-{{editTarget.icon}}</v-icon>
                                             </div>
                                             <div style="margin-top:20px">
-                                                <a rel="external nofollow noopener noreferrer" href="https://materialdesignicons.com/">Icon Reference</a>
+                                                <a rel="external nofollow noopener noreferrer" href="https://materialdesignicons.com/" target="_blank">Icon Reference</a>
                                             </div>
                                             <v-switch v-model="editTarget.showOnTop" label="Ongoing Issue Type" />
                                         </v-col>
