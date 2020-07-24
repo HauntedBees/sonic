@@ -319,7 +319,7 @@
                 SELECT r.parent AS id, e.name, r.relationtype
                 FROM relationships r
                     INNER JOIN entity e ON r.parent = e.id
-                WHERE r.child = :i
+                WHERE r.child = :i OR r.parent = :i
                 UNION ALL
                 SELECT ep.id, ep.name, r.relationtype
                 FROM ancestor a
