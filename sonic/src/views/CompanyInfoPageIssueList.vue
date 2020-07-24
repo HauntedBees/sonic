@@ -68,10 +68,10 @@
             LoadIssues() {
                 this.issues = [];
                 bee.get("GetAllIssues", [this.companyId, this.showAllRelationships], data => {
-                    this.issues = data.result;
+                    this.issues = data.result.filter(i => i.issueTypeId !== 0);
                     this.noIssues = this.issues.length === 0;
                     this.issues.forEach(e => e.ongoing = e.ongoing === "1");
-                    const namePaths = [...new Set(this.issues.map(i=>i.namepath))];
+                    const namePaths = [...new Set(data.result.map(i=>i.namepath))];
                     namePaths.forEach(pathStr => {
                         const pathsArr = pathStr.split("|");
                         FillRelationships(pathsArr);

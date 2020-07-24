@@ -69,8 +69,9 @@
 					it.id AS issueTypeId, it.name AS issueType, it.icon AS issueIcon, it.color AS issueColor,
                     i.id, i.issue, i.sourceurl, i.startdate, i.enddate, i.ongoing, i.contentwarning, it.showOnTop, a.namepath
             FROM allentities a
-				INNER JOIN issues i ON a.id = i.entity
-                INNER JOIN issuetype it ON i.type = it.id
+                LEFT JOIN issues i ON a.id = i.entity
+                LEFT JOIN issuetype it ON i.type = it.id
+            WHERE i.id IS NOT NULL OR a.id = :source
             ORDER BY CASE
                 WHEN a.id = :source THEN 
                     CASE

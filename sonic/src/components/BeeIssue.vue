@@ -99,6 +99,7 @@
         if(a === b) { return ""; }
         alreadyHit = alreadyHit || [];
         if(alreadyHit.indexOf(a) >= 0 || alreadyHit.indexOf(b) >= 0) { return ""; }
+        if(window.companyRelations[a] === undefined) { return ""; } // probably shoudn't happen
         if(window.companyRelations[a][b] !== undefined) { return window.companyRelations[a][b]; }
         alreadyHit.push(a);
         for(const company in window.companyRelations[a]) {

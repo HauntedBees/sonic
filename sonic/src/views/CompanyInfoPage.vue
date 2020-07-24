@@ -72,8 +72,8 @@
             <v-col v-if="!showAdditional && entry.hasAddtlRelationships" class="beesubmessage beelink beebar" style="text-align:center" @click="ShowAdditionalData">
                 <span>Show Additional Relationships</span>
             </v-col>
-            <v-col class="beesubmessage beelink beebar" style="text-align:center">
-                <span v-show="!showGraph && (entry.parents.length > 0 || entry.children.length > 0)" @click="ShowGraph">Show Graph</span>
+            <v-col v-show="HasRelations()" class="beesubmessage beelink beebar" style="text-align:center">
+                <span v-show="!showGraph" @click="ShowGraph">Show Graph</span>
                 <span v-show="showGraph" @click="HideGraph">Hide Graph</span>
             </v-col>
         </v-row>
@@ -161,6 +161,13 @@
             });
         },
         methods: {
+            HasRelations() {
+                return this.entry.children.length > 0
+                    || this.entry.parents.length > 0
+                    || (this.entry.investments !== undefined && this.entry.investments.length > 0)
+                    || (this.entry.investors !== undefined && this.entry.investors.length > 0)
+                    || (this.entry.relationships !== undefined && this.entry.relationships.length > 0);
+            },
             ShowAdditionalData() {
                 this.entry.investments = [];
                 this.entry.investors = [];
