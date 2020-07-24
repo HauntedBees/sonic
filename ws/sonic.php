@@ -183,6 +183,9 @@
             $links = $this->sql->GetDataTable("SELECT parent AS source, child AS target, relationtype, asOfDate FROM relationships", []);
             echo json_encode(["success" => true, "nodes" => $nodes, "links" => $links]);
         }
+        public function GetFullGraphDataFromCache() {
+            echo file_get_contents("./bigData.json");
+        }
 
         // Company
         public function GetCompanyBrowse($offset, $query) {

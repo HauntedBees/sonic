@@ -34,7 +34,8 @@
             "ready": { type:Boolean, required: true },
             "nodes": { type:Array, required: true },
             "links": { type:Array, required: true },
-            "big": { type:Boolean }
+            "big": { type:Boolean },
+            "cached": { type:Boolean }
         },
         data: () => ({
             fullyLoaded: false,
@@ -148,8 +149,10 @@
                     const size = e.data("size");
                     return (30 + 5 * size) + "px";
                 };
+                const bgImgFunc = this.cached ? e => e.data("img") : window.GetLogo;
+                console.log(bgImgFunc);
                 const fullNodeStyle = Object.assign({
-                    "background-image": GetLogo,
+                    "background-image": bgImgFunc,// window.GetLogo,
                     "background-width": "100%",
                     "background-height": "100%",
                     "width": GetSize,
@@ -201,8 +204,8 @@
         }
         return "#FFFFFF";
     }
-    function GetLogo(e) {
-        const iconx = e.data("iconx"), icony = e.data("icony");
+    window.GetLogo = (e, x, y) => {
+        const iconx = x !== undefined ? x : e.data("iconx"), icony = y !== undefined ? y : e.data("icony");
         if(isNaN(iconx) || isNaN(icony)) { return "none"; }
         const coords = `${iconx},${icony}`;
         if(window.savedLogos[coords]) { return window.savedLogos[coords]; }
