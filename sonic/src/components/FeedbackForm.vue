@@ -23,7 +23,7 @@
                 <img style="margin-top: 10px" v-if="imgUrl!==''" :src="imgUrl" />
             </v-col>
             <v-col>
-                <v-text-field v-model="form.captcha" filled label="Please enter the CAPTCHA" />
+                <v-text-field v-model="form.captcha" filled label="CAPTCHA" />
             </v-col>
         </v-row>
         <v-row>

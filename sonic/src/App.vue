@@ -14,36 +14,38 @@
                         <span>S</span>
                         <i/>
                 </router-link>
-                <v-icon class="d-flex d-sm-none" v-if="$route.path!=='/'&&!showSearch" @click="ShowSearchBox()">mdi-magnify</v-icon>
-                <v-icon class="d-flex d-sm-none" v-if="$route.path!=='/'&&showSearch" @click="showSearch=false">mdi-close</v-icon>
-                <CompanyAutocomplete v-show="$route.path!=='/'&&showSearch" ref="mobilesearch" :class="{'d-flex':showSearch, 'd-sm-none':showSearch}" @select="Select" addtl-style="width: 260px" />
-                <CompanyAutocomplete v-show="$route.path!=='/'" :class="{'d-none d-sm-flex': $route.path!=='/'}" @select="Select" addtl-style="width: 400px" />
+                <v-icon class="d-flex d-sm-none" v-if="!onHomePage && !showSearch" @click="ShowSearchBox()">mdi-magnify</v-icon>
+                <v-icon class="d-flex d-sm-none" v-if="!onHomePage && showSearch" @click="showSearch=false">mdi-close</v-icon>
+                <CompanyAutocomplete v-show="!onHomePage && showSearch" ref="mobilesearch" :class="{'d-flex':showSearch, 'd-sm-none':showSearch}" @select="Select" addtl-style="width: 260px" />
+                <CompanyAutocomplete v-show="!onHomePage" :class="{'d-none d-sm-flex': $route.path!=='/'}" @select="Select" addtl-style="width: 400px" />
             </div>
             <v-spacer/>
-            <v-dialog v-model="feedbackModal" max-width="640px">
-                <template v-slot:activator="{on,attrs}">
-                    <v-btn text v-bind="attrs" v-on="on" @click="OpenFeedback(-1)">
-                        <span class="mr-2">Feedback</span>
-                        <v-icon>mdi-comment-quote</v-icon>
-                    </v-btn>
-                </template>
-                <v-card color="#FFDA0C">
-                    <v-card-title>
-                        Feedback
-                        <v-spacer/>
-                        <v-btn icon @click="feedbackModal = false">
-                            <v-icon>mdi-close</v-icon>
+            <div>
+                <v-dialog v-model="feedbackModal" max-width="640px">
+                    <template v-slot:activator="{on,attrs}">
+                        <v-btn text v-bind="attrs" v-on="on" @click="OpenFeedback(-1)">
+                            <span v-show="!showSearch" class="mr-2">Feedback</span>
+                            <v-icon>mdi-comment-quote</v-icon>
                         </v-btn>
-                    </v-card-title>
-                    <FeedbackForm :issueID="issueId" :page="$route.path" modal @close="CloseFeedback" />
-                </v-card>
-            </v-dialog>
-            <v-btn text to="/admin/company" v-if="$store.state.auth && $route.path.indexOf('/admin') < 0">
-                <v-icon>mdi-account-cog</v-icon>
-            </v-btn>
-            <v-btn text :to="'/admin/company' + $route.path" v-if="$store.state.auth && $route.name === 'company'">
-                <v-icon>mdi-pencil</v-icon>
-            </v-btn>
+                    </template>
+                    <v-card color="#FFDA0C">
+                        <v-card-title>
+                            Feedback
+                            <v-spacer/>
+                            <v-btn icon @click="feedbackModal = false">
+                                <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                        </v-card-title>
+                        <FeedbackForm :issueID="issueId" :page="$route.path" modal @close="CloseFeedback" />
+                    </v-card>
+                </v-dialog>
+                <v-btn text to="/admin/company" v-if="$store.state.auth && $route.path.indexOf('/admin') < 0">
+                    <v-icon>mdi-account-cog</v-icon>
+                </v-btn>
+                <v-btn text :to="'/admin/company' + $route.path" v-if="$store.state.auth && $route.name === 'company'">
+                    <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+            </div>
         </v-app-bar>
         <v-main>
             <router-view />
@@ -67,6 +69,7 @@
             showSearch: false
         }),
         computed: {
+            onHomePage() { return this.$route.path === "/"; },
             currentYear() { return new Date().getFullYear(); }
         },
         provide: function() {
