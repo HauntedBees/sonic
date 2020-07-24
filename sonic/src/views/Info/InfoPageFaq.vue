@@ -4,7 +4,7 @@
         <p>
         You can submit feedback through the <router-link to="/info/feedback">Feedback page</router-link>, by clicking the 
         Feedback button at the top of the page, or clicking on the <v-icon color="red darken-2">mdi-alert-box</v-icon>
-        icons on individual issues. Another reason this page was made is due to the large number of infographics and memes we've
+        icons on individual issues. Another reason this site was made is due to the large number of infographics and memes we've
         seen circulating about how "these <em>X</em> companies own nearly everything!" that often contain extremely out-of-date
         information. We don't want that to happen here. We try to be proactive in updating things and verifying data, but this isn't
         our full time job so some things may be a bit dated or in need of update. We welcome any and all feedback to improve the site 
@@ -13,6 +13,9 @@
         <p>
         And if you're a lawyer for some company mentioned on this site, we'll gladly remove any information if it's inaccurate or in need
         of revision, but we won't remove verifiable facts even if they make you look bad. 
+        </p>
+        <p>
+        Or, even better, if you want to help with keeping this website up-to-date, contact us through that Feedback form! 
         </p>
         <h2 style="margin-bottom:20px">Why did you make this?</h2>
         <p>
@@ -26,27 +29,21 @@
         <h2 style="margin-bottom:20px">What kind of information is this site for?</h2>
         <p>
         The intentions are to help people figure out who actually owns brands/companies/products and to highlight 
-        issues with those companies. The general rule of thumb for whether or not a brand will be listed here is how
-        easy it is to figure out who owns it -- if your bag of cookies has a big "FunFoods Inc." logo on it, ideally 
-        there won't be an entry for the cookies on here, just one for FunFoods. The issues we highlight would be
-        considered nonpartisan in a normal world, but because we live in a country where things like the existence of climate
-        change and whether or not one should wear a mask during a worldwide pandemic are partisan issues, that may not 
-        be how it is actually perceived. If a company is dumping toxic waste in a national park, that's something we'd 
-        want to record. If a company's social media account posts some generic platitude in support of a "liberal" social 
-        movement, that is not something that is worth recording. Likewise, while we do want to have lots of information, 
-        if a company did something bad 20 years ago and hasn't done it again since then, it probably isn't at the top of
-        our to-do list.
+        issues with them. We try to approach what an "issue" is in a nonpartisan way. For things like 
+        "this company uses slave labor" and "the CEO of this company literally killed someone" we really want to believe
+        no one will say "well, I don't see anything wrong with that!" However there will be some issues that may not be
+        as unanimously frowned upon. We aren't here to convince you that those things are bad - if you see something and
+        think it's not actually a problem for you, cool, just ignore it and move on.
         </p>
         <p>
-        We are also trying to avoid listing actual humans on here unless a certain person happens to own several unrelated
+        We also try to avoid listing <em>people</em> on here unless a certain person happens to own several unrelated
         companies (i.e. Jeff Bezos owns both Amazon and the Washington Post, Elon Musk owns Tesla and SpaceX) - in those cases
-        we feel it makes sense to list them so we can list specific things those people might have done that technically don't
-        apply to a single one of their companies, instead of having to make separate entries for each company about those things.
+        we feel it makes sense to list them. Most people don't own multiple businesses, though, so this is more of an exception to the rule.
         In other cases, we'd rather list the actions of people under the companies they work for. We want to err on the side of
-        caution when listing people for several reasons. Practically, people can in theory change, learn, and grow, whereas the average
-        big business will likely be as evil as legally possible (or slightly moreso depending on how good their lawyers are) regardless
-        of how old they are. Legally, it is safer to say "Company X is a piece of shit that should be destroyed" than it is to say
-        "Person Y is a piece of shit who should be destroyed."
+        caution when listing people for several reasons. People can in theory change, learn, and grow. The average big business,
+        however, will likely be as evil as legally possible (or slightly worse depending on how good their lawyers are).
+        Also, saying "Company X is a bad and should be destroyed" is considered "an opinion," whereas "Person Y is bad and should
+        be destroyed" is considered "a threat."
         </p>
         <h2 style="margin-bottom:20px">Why don't you share good things companies do, too?</h2>
         <p>
@@ -80,26 +77,25 @@
         <p>
         For perhaps a more genuine answer, I don't think there's much just one person <em>can</em> do to change things. It's not like 
         there's just a few big evil CEOs in charge of things that we can force to step down and then everything will be okay. No country
-        is going to elect a president or prime minister that actually fixes things in a long term and meaningful way. The entire 
+        is going to elect a leader that actually fixes things in a long term and meaningful way. The entire 
         system enables and encourages all of the garbage, and one person can't change an entire system. Think about what causes matter 
-        the most to you, and look into organizations that are fighting for that cause - especially local ones. Not buying from a 
+        the most to you, and look into organizations that are fighting for them - especially local ones. Not buying from a 
         bad business won't make them change their ways, but organized and deliberate boycotts have better luck. If you work for a company 
         engaged in some bad practices, reach out to coworkers to try making changes internally (and if doing it through the system doesn't
         work, there's a reason unions and strikes exist). 
         </p>
         <p>
         If you can, donate to groups working to make change. Work with them. Join protests and boycotts. Don't vote for candidates that make 
-        things worse. Organize, unionize, and maybe do things that I probably shouldn't mention here (like sending a sternly written letter 
-        to a customer service department, obviously~).
+        things worse. Organize, unionize, and do what you can to raise awareness for the issues that matter to you.
         </p>
         <h2 style="margin-bottom:20px">You're just jealous/bitter/poor or a liberal/communist/snowflake, aren't you?</h2>
         <p>
-        Hey, if you think this site saying "this company's CEO is a murderer, and murder is bad" is a partisan issue, then that says more
-        about you than it does about me. 
+        Hey, if you think "this company's CEO is a murderer, and murder is bad" is a partisan issue, then that says more
+        about you than it does about us. 
         </p>
         <h2 style="margin-bottom:20px">Do people really ask you questions?</h2>
         <p>
-        No, but I figured I'd get a head start so I wouldn't have to bother writing this page later in case someone does.
+        No, but we figured we'd get a head start so we wouldn't have to bother writing this page later in case someone does.
         </p>
     </v-container>
 </template>
