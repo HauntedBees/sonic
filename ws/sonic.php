@@ -44,6 +44,13 @@
             echo "{\"success\": true }";
         }
 
+        // Count
+        public function GetCounts() {
+            $entities = $this->sql->GetIntValue("SELECT COUNT(*) FROM entity", []);
+            $issues = $this->sql->GetIntValue("SELECT COUNT(*) FROM issues", []);
+            echo json_encode(["success" => true, "entities" => $entities, "issues" => $issues]);
+        }
+
         // Issues
         public function GetAllIssues($company, $showOthers) {
             $relationTypes = $showOthers === "true" ? [1, 2, 3] : [1];

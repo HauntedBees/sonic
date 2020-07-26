@@ -5,7 +5,12 @@
             <div class="d-flex align-center font-weight-bold">
                 <router-link to="/" class="text-decoration-none" style="color:white">
                     <span v-if="$store.state.auth && $route.path.indexOf('/admin') >= 0" class="d-none d-sm-flex">Sonic Admin View ({{$store.state.username}})</span>
-                    <span v-if="!$store.state.auth || $route.path.indexOf('/admin') < 0" class="d-none d-sm-flex">Sonic - The Unethical Consumption Database</span>
+                    <span
+                        v-if="!$store.state.auth || $route.path.indexOf('/admin') < 0"
+                        class="d-none d-sm-flex">
+                        Sonic - The Unethical Consumption Database 
+                        <span v-show="issues > 0" style="margin-left:10px;margin-top:2px;font-size:small;font-style:italic"> ({{issues}} issues across {{entities}} companies and brands)</span>
+                    </span>
                 </router-link>
                 <router-link
                     to="/"
@@ -61,16 +66,25 @@
     @import "./assets/materialicons.min.css";
 </style>
 <script>
+    import { bee } from "src/utils/webmethod.js";
     export default {
         name: "App",
         data: () => ({
             feedbackModal: false,
             issueId: -1,
-            showSearch: false
+            showSearch: false,
+            entities: 0,
+            issues: 0
         }),
         computed: {
             onHomePage() { return this.$route.path === "/"; },
             currentYear() { return new Date().getFullYear(); }
+        },
+        created() {
+            bee.get("GetCounts", "", data => {
+                this.issues = data.issues;
+                this.entities = data.entities;
+            });
         },
         provide: function() {
             const me = this;
