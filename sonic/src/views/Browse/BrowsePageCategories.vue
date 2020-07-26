@@ -23,7 +23,7 @@
         </v-row>
         <v-row>
             <v-col cols="3" class="d-none d-sm-block">
-                <h2 class="beesubmessage">Categories</h2>
+                <h2 class="beesubmessage">Categories <span v-show="filterCategory !== 0">({{count}})</span></h2>
                 <v-chip-group column>
                     <v-chip
                         v-show="browseTree.length > 0"
@@ -82,6 +82,7 @@
             return {
                 cachedResults: {},
                 offset: 0,
+                count: 0,
                 filterCategory: 0,
                 browseTree: [],
                 selectedIdxes: [],
@@ -146,6 +147,7 @@
             LoadCompanies() {
                 bee.get("GetCompanyByCategory", [this.offset, this.filterCategory], data => {
                     const resItems = data.result;
+                    this.count = data.count;
                     if(resItems.length === 0) {
                         this.endOfList = true;
                     } else {

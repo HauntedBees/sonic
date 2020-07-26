@@ -2,7 +2,7 @@
     <v-col cols="12">
         <v-row>
             <v-col class="d-none d-sm-block">
-                <h2 class="beesubmessage" style="margin-bottom:20px">Companies, Brands, etc.</h2>
+                <h2 class="beesubmessage" style="margin-bottom:20px">Entries ({{count}})</h2>
             </v-col>
             <v-col>
                 <v-text-field v-model="search" dark append-icon="mdi-magnify" label="Search" />
@@ -29,6 +29,7 @@
         data () {
             return {
                 offset: 0,
+                count: 0, 
                 search: "",
                 endOfList: false, 
                 observer: null,
@@ -58,6 +59,7 @@
             LoadCompanies() {
                 bee.get("GetCompanyBrowse", [this.offset, this.search.trim()], data => {
                     const resItems = data.result;
+                    this.count = data.count;
                     if(resItems.length === 0) {
                         this.endOfList = true;
                     } else {

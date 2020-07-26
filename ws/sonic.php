@@ -116,7 +116,12 @@
                 ELSE i.startdate
             END DESC
             LIMIT $pageSize OFFSET $fullOffset", $params);
-            echo json_encode(["success" => true, "result" => $tbl]);
+            $count = $this->sql->GetIntValue("
+            SELECT COUNT(*)
+            FROM issues i
+                INNER JOIN issuetype it ON i.type = it.id
+            $whereClause", $params);
+            echo json_encode(["success" => true, "result" => $tbl, "count" => $count]);
         }
 
         // Issue Types
@@ -208,7 +213,8 @@
             GROUP BY e.name, c.name, c.icon, e.id
             ORDER BY e.name ASC
             LIMIT $pageSize OFFSET $fullOffset", $params);
-            echo json_encode(["success" => true, "result" => $tbl]);
+            $count = $this->sql->GetIntValue("SELECT COUNT(*) FROM entity e $whereClause", $params);
+            echo json_encode(["success" => true, "result" => $tbl, "count" => $count]);
         }
         public function GetCompanyByCategory($offset, $category) {
             $pageSize = 15;
@@ -232,7 +238,21 @@
             GROUP BY e.name, fc.name, fc.icon, e.id
             ORDER BY e.name ASC
             LIMIT $pageSize OFFSET $fullOffset", ["c" => $category]);
-            echo json_encode(["success" => true, "result" => $tbl]);
+            $count = $this->sql->GetIntValue("
+            WITH RECURSIVE fullcategories AS (
+                SELECT c.id, c.name, c.icon
+                FROM category c
+                WHERE c.id = :c
+                UNION ALL
+                SELECT c.id, c.name, c.icon
+                FROM fullcategories fc
+                    INNER JOIN categoryrelationships r ON r.parent = fc.id
+                    INNER JOIN category c ON r.child = c.id
+            )
+            SELECT COUNT(DISTINCT e.id)
+            FROM entity e
+                INNER JOIN fullcategories fc ON e.type = fc.id", ["c" => $category]);
+            echo json_encode(["success" => true, "result" => $tbl, "count" => $count]);
         }
         public function SearchCompanies($query) {
             $tbl = $this->sql->GetDataTable("
