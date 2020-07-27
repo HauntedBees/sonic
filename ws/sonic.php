@@ -166,8 +166,8 @@
 			WITH RECURSIVE allentities AS (
                 SELECT e.id AS parentId, e.name AS parentName, r.child, r.asOfDate,
                        e2.id AS childId, e2.name AS childName, r.relationtype,
-                       e.iconx AS parentx, e.icony AS parenty,
-                       e2.iconx AS childx, e2.icony AS childy
+                       e.iconx AS parentx, e.icony AS parenty, e.img AS parentimg,
+                       e2.iconx AS childx, e2.icony AS childy, e2.img AS childimg
                 FROM entity e
                     INNER JOIN relationships r ON r.parent = e.id AND r.relationtype IN ($relSql)
                     INNER JOIN entity e2 ON r.child = e2.id
@@ -175,14 +175,15 @@
                 UNION ALL
                 SELECT a.childId AS parentId, a.childName AS parentName, r.child, r.asOfDate,
                        e.id AS childId, e.name AS childName, r.relationtype,
-                       a.childx AS parentx, a.childy AS parenty,
-                       e.iconx AS childx, e.icony AS childy
+                       a.childx AS parentx, a.childy AS parenty, a.childimg AS parentimg,
+                       e.iconx AS childx, e.icony AS childy, e.img AS childimg
                 FROM allentities a
                     INNER JOIN relationships r ON r.parent = a.child AND r.relationtype IN ($relSql)
                     INNER JOIN entity e ON r.child = e.id
 				WHERE a.child IS NOT NULL
             )
-            SELECT parentId, parentName, childId, childName, asOfDate, parentx, parenty, childx, childy, relationtype,  
+            SELECT parentId, parentName, childId, childName, asOfDate, 
+                parentx, parenty, parentimg, childx, childy, childimg, relationtype,  
                 CASE WHEN parentId = :source THEN 1 ELSE 0 END AS me
             FROM allentities a", $relationTypes);
             foreach($family as &$val) {
@@ -192,7 +193,7 @@
             echo json_encode(["success" => true, "family" => $family, "rows" => $relationTypes]);
         }
         public function GetFullGraphData() {
-            $nodes = $this->sql->GetDataTable("SELECT id, name, iconx, icony FROM entity", []);
+            $nodes = $this->sql->GetDataTable("SELECT id, name, img, iconx, icony FROM entity", []);
             $links = $this->sql->GetDataTable("SELECT parent AS source, child AS target, relationtype, asOfDate FROM relationships", []);
             echo json_encode(["success" => true, "nodes" => $nodes, "links" => $links]);
         }

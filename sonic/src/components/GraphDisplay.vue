@@ -53,13 +53,7 @@
             BeginLoad() {
                 this.dataNodes = this.nodes.map(e => ({ data: e }));
                 this.dataLinks = this.links.map(e => ({ data: e }));
-                if(window.iconImg === null) {
-                    window.iconImg = new Image();
-                    window.iconImg.src = require("src/assets/icons.png");
-                    window.iconImg.onload = () => this.InitGraph();
-                } else {
-                    this.InitGraph();
-                }
+                window.InitializeLogoImages(this.InitGraph);
             },
             InitGraph() {
                 const me = performance.now();
@@ -150,9 +144,8 @@
                     return (30 + 5 * size) + "px";
                 };
                 const bgImgFunc = this.cached ? e => e.data("img") : window.GetLogo;
-                console.log(bgImgFunc);
                 const fullNodeStyle = Object.assign({
-                    "background-image": bgImgFunc,// window.GetLogo,
+                    "background-image": bgImgFunc,
                     "background-width": "100%",
                     "background-height": "100%",
                     "width": GetSize,
@@ -193,9 +186,29 @@
     let tip = null;
     window.alreadyInitialized = false;
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    window.iconImg = null;
+    window.logoImages = [];
+    window.unloadedImages = -1;
     window.logoSplitterCtx = null;
     window.savedLogos = {};
+    window.InitializeLogoImages = callback => {
+        if(window.unloadedImages < 0) { // -1 when unloaded, 0 when loaded, >0 when loading
+            window.unloadedImages = 2; // increase when adding new images
+            for(let i = 0; i < window.unloadedImages; i++) {
+                const img = new Image();
+                img.src = i === 0 ? require("src/assets/icons.png") : require(`src/assets/icons${i + 1}.png`);
+                img.onload = () => {
+                    if(--window.unloadedImages === 0) {
+                        callback();
+                    }
+                };
+                window.logoImages.push(img);
+            }
+        } else {
+            callback();
+        }
+    };
+    
+
     function GetEdgeColor(e) {
         switch(e.data("relationtype")) {
             case "1": return "#E7E700";
@@ -204,8 +217,9 @@
         }
         return "#FFFFFF";
     }
-    window.GetLogo = (e, x, y) => {
+    window.GetLogo = (e, x, y, img) => {
         const iconx = x !== undefined ? x : e.data("iconx"), icony = y !== undefined ? y : e.data("icony");
+        const imageIdx = img !== undefined ? img : e.data("img");
         if(isNaN(iconx) || isNaN(icony)) { return "none"; }
         const coords = `${iconx},${icony}`;
         if(window.savedLogos[coords]) { return window.savedLogos[coords]; }
@@ -216,7 +230,7 @@
         } else {
             window.logoSplitterCtx.clearRect(0, 0, 32, 32);
         }
-        window.logoSplitterCtx.drawImage(window.iconImg, 32 * iconx, 32 * icony, 32, 32, 0, 0, 32, 32);
+        window.logoSplitterCtx.drawImage(window.logoImages[imageIdx], 32 * iconx, 32 * icony, 32, 32, 0, 0, 32, 32);
         const uri = window.logoSplitterCtx.canvas.toDataURL("image/png");
         window.savedLogos[coords] = uri;
         return uri;

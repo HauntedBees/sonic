@@ -206,7 +206,8 @@
                                 selected: info.parentId === this.entry.id,
                                 size: 0,
                                 iconx: parseInt(info.parentx),
-                                icony: parseInt(info.parenty)
+                                icony: parseInt(info.parenty),
+                                img: parseInt(info.parentimg)
                             };
                             this.nodes.push(node);
                             nodeRef[node.id] = node;
@@ -219,7 +220,8 @@
                                 selected: info.childId === this.entry.id,
                                 size: 0,
                                 iconx: parseInt(info.childx),
-                                icony: parseInt(info.childy)
+                                icony: parseInt(info.childy),
+                                img: parseInt(info.childimg)
                             };
                             this.nodes.push(node);
                             nodeRef[node.id] = node;

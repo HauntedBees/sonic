@@ -15,44 +15,27 @@
         methods: {
             LoadGraph() {
                 bee.get("GetFullGraphDataFromCache", "", data => {
-                    console.log(data);
                     this.nodes = data.nodes;
                     this.links = data.links;
                     this.graphLoaded = true;
                 });
-                /*bee.get("GetFullGraphData", "", data => {
-                    this.nodes = data.nodes.map(n => ({
-                        id: n.id,
-                        name: n.name,
-                        label: (n.name.indexOf("The")===0?n.name[4]:n.name[0]),
-                        selected: false,
-                        iconx: parseInt(n.iconx), 
-                        icony: parseInt(n.icony),
-                        size: data.links.filter(e => e.source === n.id).length
-                    }));
-                    this.links = data.links;
-                    this.graphLoaded = true;
-                });*/
             }
         }
     }
     window.GetGraphDataForCache = () => {
         console.log("STARTING:");
-        if(window.iconImg === null) {
-            window.iconImg = new Image();
-            window.iconImg.src = require("src/assets/icons.png");
-            window.iconImg.onload = window.GetGraphDataForCache;
+        if(window.unloadedImages < 0) {
             console.log("HOLD UP, LOADING THE IMAGE");
+            window.InitializeLogoImages(window.GetGraphDataForCache);
             return;
         }
         bee.get("GetFullGraphData", "", data => {
             try {
-                console.log(data);
                 const res = { success: true };
                 res.nodes = data.nodes.map(n => ({
                     id: n.id,
                     name: n.name,
-                    img: window.GetLogo(null, n.iconx, n.icony),
+                    img: window.GetLogo(null, n.iconx, n.icony, parseInt(n.img)),
                     selected: false,
                     label: (n.name.indexOf("The")===0?n.name[4]:n.name[0]),
                     size: data.links.filter(e => e.source === n.id).length
