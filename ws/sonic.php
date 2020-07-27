@@ -302,7 +302,7 @@
         }
         public function FindCompany($name) {
             $tbl = $this->sql->GetDataTable("
-            SELECT e.name, e.type, e.id, e.description, IFNULL(c.name, '') AS typename, e.iconx, e.icony
+            SELECT e.name, e.type, e.id, e.description, IFNULL(c.name, '') AS typename, e.img, e.iconx, e.icony
             FROM entity e
                 LEFT JOIN synonym s ON e.id = s.entityid
                 LEFT JOIN category c ON e.type = c.id
@@ -320,6 +320,7 @@
                 "type" => intval($row["type"]),
                 "description" => $row["description"],
                 "typename" => $row["typename"],
+                "img" => $row["img"],
                 "iconx" => $row["iconx"],
                 "icony" => $row["icony"]
             ];
