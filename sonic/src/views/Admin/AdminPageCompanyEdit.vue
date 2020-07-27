@@ -238,12 +238,14 @@
                 this.$refs.form.resetValidation();
             },
             ClearPartial() {
+                const currentIcon = this.company.img;
                 const currentIconX = this.company.iconx;
                 const currentIconY = this.company.icony;
                 const currentCategory = this.company.type;
                 const currentParents = this.company.parents;
                 this.company = {
                     id: 0,
+                    img: currentIcon,
                     iconx: currentIconX,
                     icony: currentIconY,
                     name: "",
