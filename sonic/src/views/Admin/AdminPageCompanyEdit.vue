@@ -113,8 +113,8 @@
             <v-col cols="2">
                 <div v-if="showIcon && parseInt(company.img) === 0"
                     :style="{'width': '32px', 'height': '32px', 'background-position': iconpos, 'background': 'url(' + require('src/assets/icons.png') + ')' }" />
-                <div v-if="showIcon && parseInt(company.img) > 0"
-                    :style="{'width': '32px', 'height': '32px', 'background-position': iconpos, 'background': 'url(' + require(`src/assets/icons${parseInt(company.img) + 1}.png`) + ')' }" />
+                <div v-if="showIcon && parseInt(company.img) === 1"
+                    :style="{'width': '32px', 'height': '32px', 'background-position': iconpos, 'background': 'url(' + require(`src/assets/icons2.png`) + ')' }" />
             </v-col>
         </v-row>
         <v-row>

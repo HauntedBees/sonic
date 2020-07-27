@@ -193,14 +193,19 @@
     window.InitializeLogoImages = callback => {
         if(window.unloadedImages < 0) { // -1 when unloaded, 0 when loaded, >0 when loading
             window.unloadedImages = 2; // increase when adding new images
+            const onloadCallback = () => {
+                if(--window.unloadedImages === 0) {
+                    callback();
+                }
+            };
+            // TODO: webpack doesn't allow dynamic requires
             for(let i = 0; i < window.unloadedImages; i++) {
                 const img = new Image();
-                img.src = i === 0 ? require("src/assets/icons.png") : require(`src/assets/icons${i + 1}.png`);
-                img.onload = () => {
-                    if(--window.unloadedImages === 0) {
-                        callback();
-                    }
-                };
+                switch(i) {
+                    case 0: img.src = require("src/assets/icons.png"); break;
+                    case 1: img.src = require("src/assets/icons2.png"); break;
+                }
+                img.onload = onloadCallback;
                 window.logoImages.push(img);
             }
         } else {
