@@ -42,10 +42,7 @@
                         target="_blank"
                         style="text-decoration:none"
                         :href = "item.sourceurl"
-                        external
-                        nofollow
-                        noopener
-                        noreferrer
+                        rel = "external nofollow noopener noreferrer"
                         >
                         <v-icon color="blue darken-2" v-bind="attrs" v-on="on">mdi-link-box-variant</v-icon>
                     </a>
@@ -68,7 +65,6 @@
         props: {
             "companyId": { type: Number, required: true },
             "companyName": { type: String, required: false },
-            "namePaths": { type: Array, required: false },
             "item": { type: Object, required: true }
         },
         data: () => ({
@@ -77,24 +73,9 @@
         inject: ["triggerFeedback"],
         methods: {
             GetCompanyRelation(item) {
-                if(this.namePaths) {
-                    const validNamePaths = this.namePaths.filter(e => e.indexOf(this.companyName) >= 0 && e.indexOf(item.entityName) >= 0);
-                    if(validNamePaths.length === 0) { return "Related Company - "; }
-                    for(let i = 0; i < validNamePaths.length; i++) {
-                        const names = validNamePaths[i].split("|");
-                        const myIdx = names.indexOf(this.companyName);
-                        const theirIdx = names.indexOf(item.entityName);
-                        return myIdx < theirIdx ? "Subsidiary - " : "Parent Company - ";
-                    }
-                    return "Related Company - ";
-                } else {
-                    if(item.namepath === "") { return ""; }
-                    const names = item.namepath.split("|");
-                    const myIdx = names.indexOf(this.companyName);
-                    if(myIdx < 0) { return "Related Company - "; }
-                    const theirIdx = names.indexOf(item.entityName);
-                    return myIdx < theirIdx ? "Subsidiary - " : "Parent Company - ";
-                }
+                if(this.companyName === undefined) { return ""; }
+                const rel = GetRelationString(this.companyName, item.entityName);
+                return rel === "" ? "" : (rel + " - ");
             },
             FeedbackForIssue() { this.triggerFeedback(this.item); },
             BoostColor(color, amt) {
@@ -112,5 +93,55 @@
                 return `#${rr}${gg}${bb}`;
             }
         }
+    }
+    window.cachedRelations = {};
+    function FindRelation(a, b, alreadyHit) {
+        if(a === b) { return ""; }
+        alreadyHit = alreadyHit || [];
+        if(alreadyHit.indexOf(a) >= 0 || alreadyHit.indexOf(b) >= 0) { return ""; }
+        if(window.companyRelations[a] === undefined) { return ""; } // probably shoudn't happen
+        if(window.companyRelations[a][b] !== undefined) { return window.companyRelations[a][b]; }
+        alreadyHit.push(a);
+        for(const company in window.companyRelations[a]) {
+            const match = FindRelation(company, b, alreadyHit);
+            if(match !== "") {
+                return window.companyRelations[a][company] + match;
+            }
+        }
+        return "";
+    }
+    function GetRelationString(a, b) {
+        const key = `${a}-${b}`;
+        if(window.cachedRelations[key] !== undefined) {
+            return window.cachedRelations[key];
+        }
+        const res = FindRelation(a, b);
+        if(res === "") { 
+            window.cachedRelations[key] = "";
+            return "";
+        }
+        const allKeys = [...new Set(res)];
+        let result = "";
+        if(allKeys.length === 1) {
+            switch(allKeys[0]) {
+                case "c": result = "Child Company"; break;
+                case "p": result = "Parent Company"; break;
+                case "o": result = "Investor"; break;
+                case "m": result = "Investment"; break;
+                case "x": result = "Business Relationship"; break;
+            }
+        } else if(res.indexOf("x") >= 0) {
+            result = "Business Relationship";
+        } else if(res[0] === "m") {
+            result = "Investment";
+        } else if(allKeys.indexOf("m") >= 0 || allKeys.indexOf("o") >= 0) {
+            result = "Related through Investments";
+        } else if(allKeys.indexOf("x") >= 0) {
+            result = "Related through Business Relationships";
+        } else {
+            result = "Related Company";
+        }
+        window.cachedRelations[key] = result;
+        return result;
     }
 </script>

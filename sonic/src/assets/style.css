@@ -118,7 +118,10 @@ h2.beesubmessage {
 .tippy-content { cursor: default }
 
 /* Sidebar + Mobile Nav */
-.hasSidebar { padding-left: 256px !important }
+.hasSidebar {
+    padding-left: 256px !important;
+    margin-bottom: 60px;
+}
 @media screen and (max-width: 600px) {
     .hasSidebar {
         padding-left: 12px !important;

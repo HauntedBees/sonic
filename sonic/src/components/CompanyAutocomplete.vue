@@ -27,8 +27,8 @@
             select: null
         }),
         watch: {
-            search(val) { val && val !== this.select && this.Query(val); },
-            select(val) { val && this.$emit("select", val); }
+            search(val) { val && val !== this.select && this.Query(val.trim()); },
+            select(val) { val && this.$emit("select", val.trim()); }
         },
         methods: {
             Focus() { this.$refs.autocomplete.focus(); },
@@ -37,7 +37,10 @@
                 //console.log(item, query, itemText);
                 return true;
             },
-            Query(query) { bee.get("SearchCompanies", query, data => { this.items = data.result.map(e => e.name); }); }
+            Query(query) {
+                if(query === "") { return; }
+                bee.get("SearchCompanies", query, data => { this.items = data.result.map(e => e.name); });
+            }
         }
     }
 </script>

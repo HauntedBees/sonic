@@ -21,10 +21,7 @@
                         <a
                             v-bind="attrs"
                             v-on="on"
-                            external
-                            nofollow
-                            noopener
-                            noreferrer
+                            rel="external nofollow noopener noreferrer"
                             :href="'https://duckduckgo.com/?iar=news&q=%22'+encodeURIComponent(entry.name) + '%22'"
                             target="_blank"
                             class="viewNews"
@@ -75,8 +72,8 @@
             <v-col v-if="!showAdditional && entry.hasAddtlRelationships" class="beesubmessage beelink beebar" style="text-align:center" @click="ShowAdditionalData">
                 <span>Show Additional Relationships</span>
             </v-col>
-            <v-col class="beesubmessage beelink beebar" style="text-align:center">
-                <span v-show="!showGraph && (entry.parents.length > 0 || entry.children.length > 0)" @click="ShowGraph">Show Graph</span>
+            <v-col v-show="HasRelations()" class="beesubmessage beelink beebar" style="text-align:center">
+                <span v-show="!showGraph" @click="ShowGraph">Show Graph</span>
                 <span v-show="showGraph" @click="HideGraph">Hide Graph</span>
             </v-col>
         </v-row>
@@ -164,6 +161,13 @@
             });
         },
         methods: {
+            HasRelations() {
+                return this.entry.children.length > 0
+                    || this.entry.parents.length > 0
+                    || (this.entry.investments !== undefined && this.entry.investments.length > 0)
+                    || (this.entry.investors !== undefined && this.entry.investors.length > 0)
+                    || (this.entry.relationships !== undefined && this.entry.relationships.length > 0);
+            },
             ShowAdditionalData() {
                 this.entry.investments = [];
                 this.entry.investors = [];
@@ -202,7 +206,8 @@
                                 selected: info.parentId === this.entry.id,
                                 size: 0,
                                 iconx: parseInt(info.parentx),
-                                icony: parseInt(info.parenty)
+                                icony: parseInt(info.parenty),
+                                img: parseInt(info.parentimg)
                             };
                             this.nodes.push(node);
                             nodeRef[node.id] = node;
@@ -215,7 +220,8 @@
                                 selected: info.childId === this.entry.id,
                                 size: 0,
                                 iconx: parseInt(info.childx),
-                                icony: parseInt(info.childy)
+                                icony: parseInt(info.childy),
+                                img: parseInt(info.childimg)
                             };
                             this.nodes.push(node);
                             nodeRef[node.id] = node;

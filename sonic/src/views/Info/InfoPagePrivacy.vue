@@ -7,7 +7,7 @@
         shared with anyone.
         </p>
         <p>
-        For people who want slightly more technical information: A self-hosted <a external nofollow noopener noreferrer href="https://awstats.sourceforge.io/">AWStats</a>
+        For people who want slightly more technical information: A self-hosted <a rel="external nofollow noopener noreferrer" href="https://awstats.sourceforge.io/">AWStats</a>
         installation handles some minimal webpage analytics so we can see if we're getting a lot of traffic from a certain website
         or something. No information from this is ever shared or transferred to anyone. When submitting feedback a CAPTCHA is used
         to prevent spam - this creates an HTTP session that stores the correct value of your CAPTCHA on our end. The session does not

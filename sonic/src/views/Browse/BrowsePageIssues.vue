@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
             <v-col cols="2" class="d-none d-sm-block">
-                <h2 class="beesubmessage" style="margin-bottom:20px">Issues</h2>
+                <h2 class="beesubmessage" style="margin-bottom:20px">Issues ({{count}})</h2>
             </v-col>
             <v-col>
                 <v-chip-group v-model="selectedIdxes" column multiple>
@@ -31,6 +31,7 @@
         data () {
             return {
                 offset: 0,
+                count: 0,
                 selectedIdxes: [],
                 selectedTypes: [],
                 issues: [],
@@ -65,6 +66,7 @@
             LoadIssues() {
                 bee.get("GetFullIssueList", [this.offset, JSON.stringify(this.selectedTypes)], data => {
                     const resItems = data.result;
+                    this.count = data.count;
                     if(resItems.length === 0) {
                         this.endOfList = true;
                     } else {

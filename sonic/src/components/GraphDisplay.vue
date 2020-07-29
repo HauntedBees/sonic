@@ -5,7 +5,19 @@
         </div>
         <div class="graph loadedgraph" :style="{'width':big?'100%':'75%', 'height':big?'780px':'320px'}" />
         <div style="height:0px">
-            <v-progress-circular v-show="!fullyLoaded" dark style="position:relative;left:47%;bottom:202px" color="#FFFFFF" size="64" width="4" indeterminate />
+            <v-progress-circular
+                v-show="!fullyLoaded"
+                dark
+                :style="{position:'relative', left: '47%', bottom: big?'502px':'202px' }"
+                color="#FFFFFF"
+                size="64"
+                width="4" 
+                indeterminate />
+        </div>
+        <div class="beesubmessage beebar"
+            v-show="big&&!fullyLoaded"
+            style="text-align:center; bottom: 602px">
+            This may take a moment to load...
         </div>
         <div v-if="!big" style="text-align:right; margin: 0 12%">
             <v-btn @click="RenderMap" class="ma-2" dark color="blue darken-1">Download</v-btn>
@@ -22,7 +34,8 @@
             "ready": { type:Boolean, required: true },
             "nodes": { type:Array, required: true },
             "links": { type:Array, required: true },
-            "big": { type:Boolean }
+            "big": { type:Boolean },
+            "cached": { type:Boolean }
         },
         data: () => ({
             fullyLoaded: false,
@@ -40,13 +53,7 @@
             BeginLoad() {
                 this.dataNodes = this.nodes.map(e => ({ data: e }));
                 this.dataLinks = this.links.map(e => ({ data: e }));
-                if(window.iconImg === null) {
-                    window.iconImg = new Image();
-                    window.iconImg.src = require("src/assets/icons.png");
-                    window.iconImg.onload = () => this.InitGraph();
-                } else {
-                    this.InitGraph();
-                }
+                window.InitializeLogoImages(this.InitGraph);
             },
             InitGraph() {
                 const me = performance.now();
@@ -136,8 +143,9 @@
                     const size = e.data("size");
                     return (30 + 5 * size) + "px";
                 };
+                const bgImgFunc = this.cached ? e => e.data("img") : window.GetLogo;
                 const fullNodeStyle = Object.assign({
-                    "background-image": GetLogo,
+                    "background-image": bgImgFunc,
                     "background-width": "100%",
                     "background-height": "100%",
                     "width": GetSize,
@@ -178,8 +186,34 @@
     let tip = null;
     window.alreadyInitialized = false;
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    window.iconImg = null;
+    window.logoImages = [];
+    window.unloadedImages = -1;
+    window.logoSplitterCtx = null;
     window.savedLogos = {};
+    window.InitializeLogoImages = callback => {
+        if(window.unloadedImages < 0) { // -1 when unloaded, 0 when loaded, >0 when loading
+            window.unloadedImages = 2; // increase when adding new images
+            const onloadCallback = () => {
+                if(--window.unloadedImages === 0) {
+                    callback();
+                }
+            };
+            // TODO: webpack doesn't allow dynamic requires
+            for(let i = 0; i < window.unloadedImages; i++) {
+                const img = new Image();
+                switch(i) {
+                    case 0: img.src = require("src/assets/icons.png"); break;
+                    case 1: img.src = require("src/assets/icons2.png"); break;
+                }
+                img.onload = onloadCallback;
+                window.logoImages.push(img);
+            }
+        } else {
+            callback();
+        }
+    };
+    
+
     function GetEdgeColor(e) {
         switch(e.data("relationtype")) {
             case "1": return "#E7E700";
@@ -188,15 +222,21 @@
         }
         return "#FFFFFF";
     }
-    function GetLogo(e) {
-        const iconx = e.data("iconx"), icony = e.data("icony");
+    window.GetLogo = (e, x, y, img) => {
+        const iconx = x !== undefined ? x : e.data("iconx"), icony = y !== undefined ? y : e.data("icony");
+        const imageIdx = img !== undefined ? img : e.data("img");
         if(isNaN(iconx) || isNaN(icony)) { return "none"; }
         const coords = `${iconx},${icony}`;
         if(window.savedLogos[coords]) { return window.savedLogos[coords]; }
-        const c = document.createElement("canvas");
-        c.width = 32; c.height = 32;
-        c.getContext("2d").drawImage(window.iconImg, 32 * iconx, 32 * icony, 32, 32, 0, 0, 32, 32);
-        const uri = c.toDataURL("image/png");
+        if(window.logoSplitterCtx === null) {
+            const c = document.createElement("canvas");
+            c.width = 32; c.height = 32;
+            window.logoSplitterCtx = c.getContext("2d");
+        } else {
+            window.logoSplitterCtx.clearRect(0, 0, 32, 32);
+        }
+        window.logoSplitterCtx.drawImage(window.logoImages[imageIdx], 32 * iconx, 32 * icony, 32, 32, 0, 0, 32, 32);
+        const uri = window.logoSplitterCtx.canvas.toDataURL("image/png");
         window.savedLogos[coords] = uri;
         return uri;
     }

@@ -169,15 +169,17 @@
                         return;
                     }
                     $company->id = $this->sql->InsertAndReturnID("
-                    INSERT INTO entity (name, type, description, iconx, icony)
-                        VALUES (:n, :t, :d, :x, :y)",
-                    ["n" => $company->name, "t" => $company->type, "d" => $company->description, "x" => $company->iconx, "y" => $company->icony]);
+                    INSERT INTO entity (name, type, description, img, iconx, icony)
+                        VALUES (:n, :t, :d, :img, :x, :y)",
+                    ["n" => $company->name, "t" => $company->type, "d" => $company->description, 
+                     "img" => $company->img, "x" => $company->iconx, "y" => $company->icony]);
                 } else {
                     $this->sql->ExecuteNonQuery("
                     UPDATE entity SET 
-                        name = :n, type = :t, description = :d, iconx = :x, icony = :y
+                        name = :n, type = :t, description = :d, img = :img, iconx = :x, icony = :y
                     WHERE id = :i",
-                    ["n" => $company->name, "t" => $company->type, "d" => $company->description, "x" => $company->iconx, "y" => $company->icony, "i" => $company->id]);
+                    ["n" => $company->name, "t" => $company->type, "d" => $company->description, 
+                     "img" => $company->img, "x" => $company->iconx, "y" => $company->icony, "i" => $company->id]);
                     $this->sql->ExecuteNonQuery("DELETE FROM synonym WHERE entityid = :i", ["i" => $company->id]);
                     $this->sql->ExecuteNonQuery("DELETE FROM relationships WHERE child = :i", ["i" => $company->id]);
                 }

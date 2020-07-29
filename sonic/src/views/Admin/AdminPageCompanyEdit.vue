@@ -93,6 +93,7 @@
             </v-col>
         </v-row>
         <v-row>
+            <v-col cols="1"/>
             <v-col cols="2">
                 <v-switch
                     v-model="showIcon"
@@ -101,16 +102,24 @@
                     />
             </v-col>
             <v-col cols="2">
+                <v-text-field v-show="showIcon" v-model="company.img" type="number" dense label="File #" />
+            </v-col>
+            <v-col cols="2">
                 <v-text-field v-show="showIcon" v-model="company.iconx" type="number" dense label="Logo X" />
             </v-col>
             <v-col cols="2">
                 <v-text-field v-show="showIcon" v-model="company.icony" type="number" dense label="Logo Y" />
             </v-col>
             <v-col cols="2">
-                <div v-show="showIcon"
+                <div v-if="showIcon && parseInt(company.img) === 0"
                     :style="{'width': '32px', 'height': '32px', 'background-position': iconpos, 'background': 'url(' + require('src/assets/icons.png') + ')' }" />
+                <div v-if="showIcon && parseInt(company.img) === 1"
+                    :style="{'width': '32px', 'height': '32px', 'background-position': iconpos, 'background': 'url(' + require(`src/assets/icons2.png`) + ')' }" />
             </v-col>
-            <v-col cols="4">
+        </v-row>
+        <v-row>
+            <v-col cols="5" />
+            <v-col cols="7">
                 <SaveButton @save="Save" />
                 <v-btn class="ma-2" @click="Clear">Clear</v-btn>
                 <v-btn class="ma-2" @click="ClearPartial">Partial Clear</v-btn>
@@ -140,6 +149,7 @@
                 categories: [],
                 company: {
                     id: 0,
+                    img: 0,
                     name: "",
                     description: "",
                     synonyms: [],
@@ -172,11 +182,6 @@
             this.CompanySearch();
         },
         methods: {
-            /*ParentFilter() { // item, query, itemText
-            // TODO: make me matter? maybe?
-            //console.log(item, query, itemText);
-            return true;
-            },*/
             QueryCategory(query) { beeSecure.get("SearchCategories", query, data => { this.categories = data.result.map(e => ({ value: e.id, text: e.name })); }); },
             QueryParent(query) { bee.get("SearchCompanies", query, data => { this.parentItems = data.result.map(e => ({ value: e.id, text: e.name })); }); },
             CompanySearch() {
@@ -220,6 +225,7 @@
             Clear() {
                 this.company = {
                     id: 0,
+                    img: 0,
                     name: "",
                     description: "",
                     type: 0,
@@ -232,12 +238,14 @@
                 this.$refs.form.resetValidation();
             },
             ClearPartial() {
+                const currentIcon = this.company.img;
                 const currentIconX = this.company.iconx;
                 const currentIconY = this.company.icony;
                 const currentCategory = this.company.type;
                 const currentParents = this.company.parents;
                 this.company = {
                     id: 0,
+                    img: currentIcon,
                     iconx: currentIconX,
                     icony: currentIconY,
                     name: "",
@@ -254,13 +262,16 @@
             Save() {
                 const res = this.$refs.form.validate();
                 if(!res) { return; }
+                this.company.name = this.company.name.trim();
                 this.company.parents = this.company.parents.map(e => parseInt(e));
                 if(this.showIcon) {
                     this.company.iconx = parseInt(this.company.iconx);
                     this.company.icony = parseInt(this.company.icony);
+                    this.company.img = parseInt(this.company.img);
                 } else {
                     this.company.iconx = null;
                     this.company.icony = null;
+                    this.company.img = 0;
                 }
                 beeSecure.post("SaveCompany", this.company, () => {
                     this.$store.commit("triggerMessage", "Saved successfully.");

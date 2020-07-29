@@ -44,6 +44,13 @@
             echo "{\"success\": true }";
         }
 
+        // Count
+        public function GetCounts() {
+            $entities = $this->sql->GetIntValue("SELECT COUNT(*) FROM entity", []);
+            $issues = $this->sql->GetIntValue("SELECT COUNT(*) FROM issues", []);
+            echo json_encode(["success" => true, "entities" => $entities, "issues" => $issues]);
+        }
+
         // Issues
         public function GetAllIssues($company, $showOthers) {
             $relationTypes = $showOthers === "true" ? [1, 2, 3] : [1];
@@ -54,7 +61,13 @@
                 FROM entity e
                 WHERE e.id IN (:keysStr)
                 UNION ALL
-                SELECT e.id, e.name, CONCAT(a.namepath, '|', e.name) AS namepath
+                SELECT e.id, e.name,
+                    CASE r.relationtype
+                        WHEN 1 THEN CONCAT(a.namepath, '|', e.name)
+                        WHEN 2 THEN CONCAT(a.namepath, '|>', e.name)
+                        WHEN 3 THEN CONCAT(a.namepath, '|[', e.name)
+                    END
+                    AS namepath
                 FROM allentities a
                     INNER JOIN relationships r ON r.parent = a.id AND r.relationtype IN ($relSql)
 					INNER JOIN entity e ON r.child = e.id
@@ -63,8 +76,9 @@
 					it.id AS issueTypeId, it.name AS issueType, it.icon AS issueIcon, it.color AS issueColor,
                     i.id, i.issue, i.sourceurl, i.startdate, i.enddate, i.ongoing, i.contentwarning, it.showOnTop, a.namepath
             FROM allentities a
-				INNER JOIN issues i ON a.id = i.entity
-                INNER JOIN issuetype it ON i.type = it.id
+                LEFT JOIN issues i ON a.id = i.entity
+                LEFT JOIN issuetype it ON i.type = it.id
+            WHERE i.id IS NOT NULL OR a.id = :source
             ORDER BY CASE
                 WHEN a.id = :source THEN 
                     CASE
@@ -109,7 +123,12 @@
                 ELSE i.startdate
             END DESC
             LIMIT $pageSize OFFSET $fullOffset", $params);
-            echo json_encode(["success" => true, "result" => $tbl]);
+            $count = $this->sql->GetIntValue("
+            SELECT COUNT(*)
+            FROM issues i
+                INNER JOIN issuetype it ON i.type = it.id
+            $whereClause", $params);
+            echo json_encode(["success" => true, "result" => $tbl, "count" => $count]);
         }
 
         // Issue Types
@@ -147,8 +166,8 @@
 			WITH RECURSIVE allentities AS (
                 SELECT e.id AS parentId, e.name AS parentName, r.child, r.asOfDate,
                        e2.id AS childId, e2.name AS childName, r.relationtype,
-                       e.iconx AS parentx, e.icony AS parenty,
-                       e2.iconx AS childx, e2.icony AS childy
+                       e.iconx AS parentx, e.icony AS parenty, e.img AS parentimg,
+                       e2.iconx AS childx, e2.icony AS childy, e2.img AS childimg
                 FROM entity e
                     INNER JOIN relationships r ON r.parent = e.id AND r.relationtype IN ($relSql)
                     INNER JOIN entity e2 ON r.child = e2.id
@@ -156,14 +175,15 @@
                 UNION ALL
                 SELECT a.childId AS parentId, a.childName AS parentName, r.child, r.asOfDate,
                        e.id AS childId, e.name AS childName, r.relationtype,
-                       a.childx AS parentx, a.childy AS parenty,
-                       e.iconx AS childx, e.icony AS childy
+                       a.childx AS parentx, a.childy AS parenty, a.childimg AS parentimg,
+                       e.iconx AS childx, e.icony AS childy, e.img AS childimg
                 FROM allentities a
                     INNER JOIN relationships r ON r.parent = a.child AND r.relationtype IN ($relSql)
                     INNER JOIN entity e ON r.child = e.id
 				WHERE a.child IS NOT NULL
             )
-            SELECT parentId, parentName, childId, childName, asOfDate, parentx, parenty, childx, childy, relationtype,  
+            SELECT parentId, parentName, childId, childName, asOfDate, 
+                parentx, parenty, parentimg, childx, childy, childimg, relationtype,  
                 CASE WHEN parentId = :source THEN 1 ELSE 0 END AS me
             FROM allentities a", $relationTypes);
             foreach($family as &$val) {
@@ -173,9 +193,12 @@
             echo json_encode(["success" => true, "family" => $family, "rows" => $relationTypes]);
         }
         public function GetFullGraphData() {
-            $nodes = $this->sql->GetDataTable("SELECT id, name, iconx, icony FROM entity", []);
+            $nodes = $this->sql->GetDataTable("SELECT id, name, img, iconx, icony FROM entity", []);
             $links = $this->sql->GetDataTable("SELECT parent AS source, child AS target, relationtype, asOfDate FROM relationships", []);
             echo json_encode(["success" => true, "nodes" => $nodes, "links" => $links]);
+        }
+        public function GetFullGraphDataFromCache() {
+            echo file_get_contents("./bigData.json");
         }
 
         // Company
@@ -198,7 +221,8 @@
             GROUP BY e.name, c.name, c.icon, e.id
             ORDER BY e.name ASC
             LIMIT $pageSize OFFSET $fullOffset", $params);
-            echo json_encode(["success" => true, "result" => $tbl]);
+            $count = $this->sql->GetIntValue("SELECT COUNT(*) FROM entity e $whereClause", $params);
+            echo json_encode(["success" => true, "result" => $tbl, "count" => $count]);
         }
         public function GetCompanyByCategory($offset, $category) {
             $pageSize = 15;
@@ -222,7 +246,21 @@
             GROUP BY e.name, fc.name, fc.icon, e.id
             ORDER BY e.name ASC
             LIMIT $pageSize OFFSET $fullOffset", ["c" => $category]);
-            echo json_encode(["success" => true, "result" => $tbl]);
+            $count = $this->sql->GetIntValue("
+            WITH RECURSIVE fullcategories AS (
+                SELECT c.id, c.name, c.icon
+                FROM category c
+                WHERE c.id = :c
+                UNION ALL
+                SELECT c.id, c.name, c.icon
+                FROM fullcategories fc
+                    INNER JOIN categoryrelationships r ON r.parent = fc.id
+                    INNER JOIN category c ON r.child = c.id
+            )
+            SELECT COUNT(DISTINCT e.id)
+            FROM entity e
+                INNER JOIN fullcategories fc ON e.type = fc.id", ["c" => $category]);
+            echo json_encode(["success" => true, "result" => $tbl, "count" => $count]);
         }
         public function SearchCompanies($query) {
             $tbl = $this->sql->GetDataTable("
@@ -264,7 +302,7 @@
         }
         public function FindCompany($name) {
             $tbl = $this->sql->GetDataTable("
-            SELECT e.name, e.type, e.id, e.description, IFNULL(c.name, '') AS typename, e.iconx, e.icony
+            SELECT e.name, e.type, e.id, e.description, IFNULL(c.name, '') AS typename, e.img, e.iconx, e.icony
             FROM entity e
                 LEFT JOIN synonym s ON e.id = s.entityid
                 LEFT JOIN category c ON e.type = c.id
@@ -282,6 +320,7 @@
                 "type" => intval($row["type"]),
                 "description" => $row["description"],
                 "typename" => $row["typename"],
+                "img" => $row["img"],
                 "iconx" => $row["iconx"],
                 "icony" => $row["icony"]
             ];
@@ -305,8 +344,20 @@
             $parentVals = [];
             $obj["parents"] = [];
             $obj["hasAddtlRelationships"] = 0 < $this->sql->GetIntValue("
-            SELECT COUNT(*) FROM relationships WHERE relationtype > 1 AND (child = :i OR parent = :i) 
-            ", ["i" => $obj["id"]]);
+            WITH RECURSIVE ancestor AS (
+                SELECT r.parent AS id, e.name, r.relationtype
+                FROM relationships r
+                    INNER JOIN entity e ON r.parent = e.id
+                WHERE r.child = :i OR r.parent = :i
+                UNION ALL
+                SELECT ep.id, ep.name, r.relationtype
+                FROM ancestor a
+                    INNER JOIN relationships r ON r.child = a.id
+                    INNER JOIN entity ep ON r.parent = ep.id
+            )
+            SELECT COUNT(*)
+            FROM ancestor
+            WHERE relationtype <> 1", ["i" => $obj["id"]]);
             foreach($parents as $k=>$v) {
                 $id = intval($v["id"]);
                 $depth = intval($v["depth"]);
