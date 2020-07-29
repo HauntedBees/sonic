@@ -20,12 +20,13 @@
             This may take a moment to load...
         </div>
         <div v-if="!big" style="text-align:right; margin: 0 12%">
-            <v-btn @click="RenderMap" class="ma-2" dark color="blue darken-1">Download</v-btn>
+            <v-btn @click="GenerateGraphImageFile" class="ma-2" dark color="blue darken-1">Download</v-btn>
         </div>
     </div>
 </template>
 <script>
     import cytoscape from "cytoscape";
+    import fcose from "cytoscape-fcose";
     import popper from "cytoscape-popper";
     import tippy from "tippy.js";
     import { saveAs } from "file-saver";
@@ -60,6 +61,7 @@
                 if(!window.alreadyInitialized) {
                     try {
                         cytoscape.use(popper);
+                        cytoscape.use(fcose);
                     } catch { // TODO: figure out a way to not reinitialize it every time
                         console.log("it did the thing bt we good");
                     }
@@ -68,7 +70,7 @@
 
                 const cy = this.GetCytoscapeObj(
                                 document.getElementsByClassName("loadedgraph"),
-                                { name: "cose", animate: false, nodeDimensionsIncludeLabels: true },
+                                { name: "fcose", animate: false, fit: true, quality: "proof" },
                                 {
                                     "border-color": e => e.data("selected") ? "#22E546" : "#E7E721",
                                     "border-width": e => e.data("selected") ? "2px" : "3px",
@@ -78,7 +80,7 @@
                                     "text-valign": "center",
                                     "text-outline-opacity": 0.5,
                                     "text-margin-y": "1px",
-                                    "content": e => isNaN(e.data("iconx")) ? e.data("label") : ""
+                                    "content": e => isNaN(e.data("iconx")) && e.data("img") === undefined ? e.data("label") : ""
                                 }
                 );
                 cy.on("mouseover", "node", ShowTooltip);
@@ -96,10 +98,10 @@
                 console.log("Time: " + (performance.now() - me));
                 this.fullyLoaded = true;
             },
-            RenderMap() {
+            GenerateGraphImageFile() {
                 const cy = this.GetCytoscapeObj(
                                 document.getElementsByClassName("renderGraph"),
-                                { name: "cose", animate: false, nodeDimensionsIncludeLabels: true },
+                                { name: "fcose", animate: false, fit: true, nodeDimensionsIncludeLabels: true, quality: "proof" },
                                 {
                                     "border-color": "#E7E721",
                                     "border-width": "3px",

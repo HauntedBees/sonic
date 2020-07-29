@@ -22,6 +22,9 @@ The following node packages are used:
  * [core-js](https://github.com/zloirock/core-js)
  * [Cytoscape.js](https://js.cytoscape.org/)
  * [cytoscape-popper](https://github.com/cytoscape/cytoscape.js-popper)
+ * [cytoscape-fcose](https://github.com/iVis-at-Bilkent/cytoscape.js-fcose)
+   * U. Dogrusoz, E. Giral, A. Cetintas, A. Civril, and E. Demir, "[A Layout Algorithm For Undirected Compound Graphs](http://www.sciencedirect.com/science/article/pii/S0020025508004799)", Information Sciences, 179, pp. 980-994, 2009.
+   * A. Civril, M. Magdon-Ismail, and E. Bocek-Rivele, "[SSDE: Fast Graph Drawing Using Sampled Spectral Distance Embedding](https://link.springer.com/chapter/10.1007/978-3-540-70904-6_5)", International Symposium on Graph Drawing, pp. 30-41, 2006.
  * [Popper](https://popper.js.org/)
  * [Tippy.js](https://atomiks.github.io/tippyjs/)
  * [vue-moment](https://github.com/brockpetrie/vue-moment)
