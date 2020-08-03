@@ -1,16 +1,26 @@
-# sonic - an unethical consumption database
+# sonic - a relational database visualization
 
 ## wut
-A resource for tracking shitty things companies do, and finding out what companies own the companies you think aren't as shitty.
+A web app that displays relationships between entities and data points about those entities - for example, if A is a parent of B and C, and C has some data, you will see C's 
+data point on B's page as a related entity, on A's page as a child entity, and so on. Admin users can add entities, link them, add data points, and assign categories to both the 
+entities and data points. Users can search for entities, browse entities and data points by name and category, and view graphs showing the relationships between entities.
+
+This web app was developed for [sonic - an unethical consumption database](https://www.hauntedbees.com/sonic.html), a website that shows corporations and brands, their often 
+hidden relationships, and questionable behaviors from them (i.e. companies that use child labor, CEOs assaulting employees).
+
+This code can be used for any relational data, but there is some terminology directly tied to the "corporations and their issues" relationship which can easily be changed; the 
+logic itself is largely agnostic to the intended use.
 
 ## license
-The source code is licensed with the [GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.en.html) and all text is licensed with the [CC BY-SA 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/legalcode).
+The source code is licensed with the [GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.en.html) and all text in the code and database are licensed
+with the [CC BY-SA 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/legalcode). All corporate logos belong to their respective owners, and the "THERE IS NO SUCH THING
+AS ETHICAL CONSUMPTION UNDER CAPITALISM" image is from a meme - source currently unknown.
 
 ## why
 I got tired of seeing #hip new products from #trendy new companies only to find out they were subsidiaries of garbage corporations.
 
 ## requirements
-For the frontend it's just a website. To make meaningful changes it'd probably be a good idea to get [Node.js](https://nodejs.org/en/) and run the build steps below. The backend uses PHP and interacts with a MySQL or MariaDB database.
+The frontend is a VueJS website. The backend is written in PHP and interacts with a MySQL/MariaDB database.
 
 ## dependencies
 The following node packages are used:
