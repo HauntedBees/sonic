@@ -53,7 +53,7 @@
         <v-list-item-action>
             <v-tooltip top>
                 <template v-slot:activator="{on, attrs}">
-                    <v-icon @click="FeedbackForIssue" color="red darken-2" v-bind="attrs" v-on="on">mdi-alert-box</v-icon>
+                    <v-icon @click="FeedbackForIssue" color="red darken-2" style="padding-top:1px" v-bind="attrs" v-on="on">mdi-alert-box</v-icon>
                 </template>
                 <span>Report Inaccuracy</span>
             </v-tooltip>
