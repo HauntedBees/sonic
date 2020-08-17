@@ -70,7 +70,27 @@
 
                 const cy = this.GetCytoscapeObj(
                                 document.getElementsByClassName("loadedgraph"),
-                                { name: "fcose", animate: false, fit: true, quality: "proof" },
+                                (
+                                    this.big
+                                    ?
+                                    {
+                                        name: "fcose",
+                                        animate: false,
+                                        fit: true, 
+                                        packComponents: false,
+                                        nodeDimensionsIncludeLabels: true,
+                                        nodeRepulsion: 10000,
+                                        nodeSeparation: 100,
+                                        nestingFactor: 4,
+                                        edgeElasticity: 0.1,
+                                        initialEnergyOnIncremental: 7,
+                                        gravity: 10,
+                                        gravityRangeCompound: 0.5,
+                                        quality: "proof"
+                                    }
+                                    :
+                                    { name: "cose", animate: false, fit: true, quality: "proof", nodeDimensionsIncludeLabels: true }
+                                ),
                                 {
                                     "border-color": e => e.data("selected") ? "#22E546" : "#E7E721",
                                     "border-width": e => e.data("selected") ? "2px" : "3px",
@@ -101,7 +121,7 @@
             GenerateGraphImageFile() {
                 const cy = this.GetCytoscapeObj(
                                 document.getElementsByClassName("renderGraph"),
-                                { name: "fcose", animate: false, fit: true, nodeDimensionsIncludeLabels: true, quality: "proof" },
+                                { name: "cose", animate: false, fit: true, nodeDimensionsIncludeLabels: true, quality: "proof" },
                                 {
                                     "border-color": "#E7E721",
                                     "border-width": "3px",
