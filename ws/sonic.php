@@ -264,11 +264,14 @@
         }
         public function SearchCompanies($query) {
             $tbl = $this->sql->GetDataTable("
-            SELECT DISTINCT e.name, e.id
+            SELECT DISTINCT e.name, e.id, GROUP_CONCAT(DISTINCT p.name ORDER BY p.name ASC SEPARATOR '/') AS parent
             FROM entity e
                 LEFT JOIN synonym s ON e.id = s.entityid
+                LEFT JOIN entityancestors a ON e.id = a.entityid
+                LEFT JOIN entity p ON a.ancestorid = p.id
             WHERE e.name LIKE :n
                 OR s.synonym LIKE :n
+			GROUP BY e.name, e.id
             LIMIT 10", ["n" => "%$query%"]);
             echo json_encode(["success" => true, "result" => $tbl]);
         }

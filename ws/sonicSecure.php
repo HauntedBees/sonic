@@ -194,6 +194,48 @@
                 echo json_encode(["success" => false, "result" => $e]);
             }
         }
+        public function RebuildAllAncestors() {
+            try {
+                $this->sql->BeginTransaction();
+                $this->sql->ExecuteNonQuery("DELETE FROM entityancestors");
+                $this->sql->ExecuteNonQuery("
+                INSERT INTO entityancestors (entityid, ancestorid)
+                SELECT origId, parentId FROM (
+                    WITH RECURSIVE ancestor AS (
+                        SELECT c.id AS origId, c.name AS origName, c.id AS childId, c.name AS childName, p.id AS parentId, p.name AS parentName, 0 AS depth
+                        FROM entity c
+                            INNER JOIN relationships r ON r.child = c.id AND r.relationtype = 1
+                            INNER JOIN entity p ON r.parent = p.id
+                        UNION ALL
+                        SELECT a.origId AS origId, a.origName AS origName, a.childId AS childId, a.childName AS childName, ep.id AS parentId, ep.name AS parentName, a.depth + 1 AS depth
+                        FROM ancestor a
+                            INNER JOIN relationships r ON r.child = a.parentId AND r.relationtype = 1
+                            INNER JOIN entity ep ON r.parent = ep.id
+                    )
+                    SELECT a.origId, a.origName, a.parentId, a.parentName, a.depth
+                    FROM ancestor a
+                        INNER JOIN (
+                            WITH RECURSIVE ancestor AS (
+                                SELECT c.id AS origId, c.name AS origName, c.id AS childId, c.name AS childName, p.id AS parentId, p.name AS parentName, 0 AS depth
+                                FROM entity c
+                                    INNER JOIN relationships r ON r.child = c.id AND r.relationtype = 1
+                                    INNER JOIN entity p ON r.parent = p.id
+                                UNION ALL
+                                SELECT a.origId AS origId, a.origName AS origName, a.childId AS childId, a.childName AS childName, ep.id AS parentId, ep.name AS parentName, a.depth + 1 AS depth
+                                FROM ancestor a
+                                    INNER JOIN relationships r ON r.child = a.parentId AND r.relationtype = 1
+                                    INNER JOIN entity ep ON r.parent = ep.id
+                                )
+                                SELECT origId, MAX(depth) AS depth FROM ancestor GROUP BY origId
+                        ) a2 ON a.origId = a2.origId AND a.depth = a2.depth
+                ) v");
+                $this->sql->CommitTransaction();
+                echo json_encode(["success" => true]);
+            } catch(Exception $e) {
+                $this->sql->RollbackTransaction();
+                echo json_encode(["success" => false, "result" => $e]);
+            }
+        }
     }
 
     if($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
