@@ -100,7 +100,7 @@
                                     "text-valign": "center",
                                     "text-outline-opacity": 0.5,
                                     "text-margin-y": "1px",
-                                    "content": e => isNaN(e.data("iconx")) && e.data("img") === undefined ? e.data("label") : ""
+                                    "content": e => isNaN(e.data("iconx")) && e.data("img") === "none" ? e.data("label") : ""
                                 }
                 );
                 cy.on("mouseover", "node", ShowTooltip);
@@ -245,9 +245,9 @@
         return "#FFFFFF";
     }
     window.GetLogo = (e, x, y, img) => {
-        const iconx = x !== undefined ? x : e.data("iconx"), icony = y !== undefined ? y : e.data("icony");
+        const iconx = e === null ? x : e.data("iconx"), icony = e === null ? y : e.data("icony");
         const imageIdx = img !== undefined ? img : e.data("img");
-        if(isNaN(iconx) || isNaN(icony)) { return "none"; }
+        if(isNaN(iconx) || isNaN(icony) || iconx === null || icony === null) { return "none"; }
         const coords = `${iconx},${icony}`;
         if(window.savedLogos[coords]) { return window.savedLogos[coords]; }
         if(window.logoSplitterCtx === null) {
