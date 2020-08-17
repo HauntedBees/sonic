@@ -3,11 +3,12 @@
         <v-data-table :search="search" :headers="headers" :items="companies" :loading="$store.state.loading">
             <template v-slot:top>
                 <v-row>
-                    <v-col cols="10">
+                    <v-col cols="8">
                         <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" />
                     </v-col>
-                    <v-col cols="2">
+                    <v-col cols="4">
                         <v-btn color="primary" class="mb-2" dark @click="Edit(null)">New Company</v-btn>
+                        <v-btn color="primary" class="mb-2" dark @click="RebuildRelationships()">Rebuild Relationships</v-btn>
                     </v-col>
                 </v-row>
             </template>
@@ -35,6 +36,9 @@
         methods: {
             Edit(item) { 
                 this.$router.push("/admin/company/" + (item === null ? "new" : item.name));
+            },
+            RebuildRelationships() {
+                beeSecure.get("RebuildAllAncestors", "", () => { this.$store.commit("triggerMessage", "Rebuilt successfully."); });
             },
             LoadCompanies() { beeSecure.get("GetCompanies", "", data => { this.companies = data.result; }); }
         }
