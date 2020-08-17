@@ -21,7 +21,7 @@
             <v-progress-circular style="margin: 0 auto" color="#F90018" size="64" width="2" indeterminate />
         </div>
         <div v-show="endOfList" class="row" style="margin-bottom: 40px; margin-top: 20px">
-            <BeeSubheader style="margin: 0 auto" text="Sorry that's everything."/>
+            <BeeSubheader style="margin: 0 auto" text="That's everything we have right now."/>
         </div>
     </v-container>
 </template>

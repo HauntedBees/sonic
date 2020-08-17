@@ -71,7 +71,7 @@
         </div>
         <div v-show="endOfList" class="row" style="margin-bottom: 40px; margin-top: 20px">
             <BeeSubheader v-show="filterCategory === 0" style="margin: 0 auto" text="Select a category to begin drilling down!"/>
-            <BeeSubheader v-show="filterCategory !== 0" style="margin: 0 auto" text="Sorry that's everything."/>
+            <BeeSubheader v-show="filterCategory !== 0" style="margin: 0 auto" text="That's everything we have right now."/>
         </div>
     </v-container>
 </template>
