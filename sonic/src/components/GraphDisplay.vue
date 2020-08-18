@@ -17,7 +17,7 @@
         <div class="beesubmessage beebar"
             v-show="big&&!fullyLoaded"
             style="text-align:center; bottom: 602px">
-            This may take a moment to load...
+            {{$t("bigGraphLoader")}}
         </div>
         <div v-if="!big" style="text-align:right; margin: 0 12%">
             <v-btn @click="GenerateGraphImageFile" class="ma-2" dark color="blue darken-1">Download</v-btn>

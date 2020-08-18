@@ -1,13 +1,17 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import VueI18n from "vue-i18n";
 import VuexPersist from "vuex-persist";
 import VueMoment from "vue-moment";
 import App from "src/App.vue";
 import vuetify from "src/plugins/vuetify";
+import messages from "src/utils/lang";
 import "src/components/components.module";
 import router from "src/views/views.module";
 Vue.use(VueMoment);
 Vue.use(Vuex);
+Vue.use(VueI18n);
+const i18n = new VueI18n({ locale: "en", messages });
 const vuexStorage = new VuexPersist({
     key: "vuex",
     storage: window.localStorage,//window.sessionStorage,
@@ -57,6 +61,7 @@ new Vue({
     vuetify,
     router,
     store,
+    i18n,
     render: h => h(App)
 }).$mount("#app");
 export default store;

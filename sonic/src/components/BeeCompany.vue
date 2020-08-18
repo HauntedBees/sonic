@@ -15,10 +15,10 @@
             <v-list-item-title class="wrap" v-text="item.name"/>
             <v-list-item-subtitle class="text-right">
                 <span v-if="item.issues > 0">
-                    <strong>Issues: </strong> {{item.issues}}
+                    <strong>{{$t("issues")}}: </strong> {{item.issues}}
                 </span>
                 <span v-if="item.children > 0">
-                    <strong>Subsidiaries: </strong> {{item.children}}
+                    <strong>{{$t("subsidiaries")}}: </strong> {{item.children}}
                 </span>
             </v-list-item-subtitle>
         </v-list-item-content>
@@ -26,8 +26,6 @@
 </template>
 <script>
     export default {
-        props: {
-            "item": { type: Object, required: true }
-        }
+        props: { "item": { type: Object, required: true } }
     }
 </script>

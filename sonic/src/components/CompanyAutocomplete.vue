@@ -15,7 +15,7 @@
         hide-details
         dark
         clearable
-        label="Search for a company or brand.">
+        :label="$t('searchBoxText')">
         <template v-slot:item="{item}">
             <v-list-item-content v-if="item.notFound === true">
                 <v-list-item-title v-text="`No results found for '${item.name}'`" />
