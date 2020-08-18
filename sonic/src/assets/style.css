@@ -1,6 +1,6 @@
 /* General Stuff */
 @font-face { font-family: "Nevis"; src: url("fonts/nevis2.ttf") }
-#app { background: repeat url("bg.png") }
+#app { background: repeat url("bg.png"); color: #000000 }
 footer a { color: #000000 !important }
 
 /* Company Page Stuff */

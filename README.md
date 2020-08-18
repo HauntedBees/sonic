@@ -28,6 +28,7 @@ The following node packages are used:
  * [vue-router](https://github.com/vuejs/vue-router)
  * [vuex](https://github.com/vuejs/vuex)
  * [vuex-persist](https://github.com/championswimmer/vuex-persist)
+ * [Vue I18n](https://kazupon.github.io/vue-i18n/)
  * [Vuetify](https://vuetifyjs.com/en/)
  * [core-js](https://github.com/zloirock/core-js)
  * [Cytoscape.js](https://js.cytoscape.org/)

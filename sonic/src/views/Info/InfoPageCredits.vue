@@ -1,6 +1,6 @@
 <template>
     <v-container style="background-color:#FFDA0C; padding:20px; border-radius: 20px">
-        <h2 style="margin-bottom:20px">Sonic v0.6895 [2020JUL28]</h2>
+        <h2 style="margin-bottom:20px">Sonic v0.6899 [2020AUG17]</h2>
         <p>
         This site was written by <a rel="external nofollow noopener noreferrer" href="https://www.hauntedbees.com/" target="_blank">Sean Finch</a>, using the
         <a rel="external nofollow noopener noreferrer" href="https://vuejs.org/" target="_blank">Vue.js</a> framework. The code is licensed under the
@@ -23,6 +23,7 @@
         <a rel="external nofollow noopener noreferrer" href="https://github.com/brockpetrie/vue-moment" target="_blank">vue-moment</a>,
         <a rel="external nofollow noopener noreferrer" href="https://momentjs.com/" target="_blank">Moment.js</a>,
         <a rel="external nofollow noopener noreferrer" href="https://github.com/vuejs/vue-router" target="_blank">vue-router</a>,
+        <a rel="external nofollow noopener noreferrer" href="https://kazupon.github.io/vue-i18n/" target="_blank">Vue I18n</a>,
         <a rel="external nofollow noopener noreferrer" href="https://vuetifyjs.com/en/" target="_blank">Vuetify</a>,
         <a rel="external nofollow noopener noreferrer" href="https://github.com/vuejs/vuex" target="_blank">vuex</a>, 
         <a rel="external nofollow noopener noreferrer" href="https://github.com/championswimmer/vuex-persist" target="_blank">vuex-persist</a>, and
