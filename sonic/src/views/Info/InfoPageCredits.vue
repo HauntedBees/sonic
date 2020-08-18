@@ -9,8 +9,7 @@
         same license. All text is licensed under the 
         <a rel="external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike License</a>,
         which basically means the same thing. The source code is available on <a rel="external nofollow noopener noreferrer" href="https://github.com/HauntedBees/Sonic" target="_blank">GitHub</a>,
-        and I'm still trying to figure out a good way to distribute the database itself. If you want a copy before I figure that out, shoot me 
-        an email and we can figure something out.
+        as is a relatively up-to-date copy of the database schema and contents.
         </p>
         <p>
         In addition to Vue.js, the following code packages were used: <a rel="external nofollow noopener noreferrer" href="https://github.com/zloirock/core-js" target="_blank">core-js</a>,

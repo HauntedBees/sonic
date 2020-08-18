@@ -8,8 +8,7 @@ entities and data points. Users can search for entities, browse entities and dat
 This web app was developed for [sonic - an unethical consumption database](https://www.hauntedbees.com/sonic.html), a website that shows corporations and brands, their often 
 hidden relationships, and questionable behaviors from them (i.e. companies that use child labor, CEOs assaulting employees).
 
-This code can be used for any relational data, but there is some terminology directly tied to the "corporations and their issues" relationship which can easily be changed; the 
-logic itself is largely agnostic to the intended use.
+This code can be used for any relational data, but there is some terminology directly tied to the "corporations and their issues" relationship, most of which is in the `src/utils/lang.js` file. The logic itself is largely agnostic to the intended use.
 
 ## license
 The source code is licensed with the [GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.en.html) and all text in the code and database are licensed
