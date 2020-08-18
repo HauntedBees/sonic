@@ -8,14 +8,12 @@
         seen circulating about how "these <em>X</em> companies own nearly everything!" that often contain extremely out-of-date
         information. We don't want that to happen here. We try to be proactive in updating things and verifying data, but this isn't
         our full time job so some things may be a bit dated or in need of update. We welcome any and all feedback to improve the site 
-        and its data!
+        and its data! Or, even better, if you want to help with keeping this website up-to-date, contact us through that Feedback form
+        with something like "hey, I want to help out!"
         </p>
         <p>
         And if you're a lawyer for some company mentioned on this site, we'll gladly remove any information if it's inaccurate or in need
-        of revision, but we won't remove verifiable facts even if they make you look bad. 
-        </p>
-        <p>
-        Or, even better, if you want to help with keeping this website up-to-date, contact us through that Feedback form! 
+        of revision, but we won't remove facts even if they make you look bad. 
         </p>
         <h2 style="margin-bottom:20px">Why did you make this?</h2>
         <p>

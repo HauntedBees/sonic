@@ -39,7 +39,7 @@
                 <div class="beesubmessage">{{entry.typename}}</div>
             </v-col>
             <v-col v-if="entry.parents.length > 0">
-                <BeeSubheader text="Owned by" />
+                <BeeSubheader :text="$t('relChild0Of')" />
                 <div class="beesubmessage">
                     <span v-for="(item, key) in entry.parents" :key="key">
                         <span v-if="key !== 0">, </span>
@@ -51,7 +51,7 @@
                 </div>
             </v-col>
             <v-col v-if="entry.children.length > 0">
-                <PotentiallyBigList title="Parent of" :items="entry.children"/>
+                <PotentiallyBigList :title="$t('relParent0Of')" :items="entry.children"/>
             </v-col>
         </v-row>
         <v-row v-if="showAdditional" style="text-align:center">
@@ -59,13 +59,13 @@
                 <v-progress-circular dark color="#FFFFFF" size="64" width="4" indeterminate />
             </v-col>
             <v-col v-show="entry.investments.length > 0">
-                <PotentiallyBigList title="Investing in" :items="entry.investments"/>
+                <PotentiallyBigList :title="$t('relParent1Of')" :items="entry.investments"/>
             </v-col>
             <v-col v-show="entry.investors.length > 0">
-                <PotentiallyBigList title="Invested in by" :items="entry.investors"/>
+                <PotentiallyBigList :title="$t('relChild1Of')" :items="entry.investors"/>
             </v-col>
             <v-col v-show="entry.relationships.length > 0">
-                <PotentiallyBigList title="Business relationship wuth" :items="entry.relationships"/>
+                <PotentiallyBigList :title="$t('rel2Of')" :items="entry.relationships"/>
             </v-col>
         </v-row>
         <v-row v-if="entry !== null">

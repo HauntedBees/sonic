@@ -16,6 +16,11 @@ export default {
         relMisc0: "Related Company",                        // components/BeeIssue.vue
         relMisc1: "Related through Investments",            // components/BeeIssue.vue
         relMisc2: "Related through Business Relationships", // components/BeeIssue.vue
+        relChild0Of: "Owned by",                            // views/CompanyInfoPage.vue
+        relParent0Of: "Parent of",                          // views/CompanyInfoPage.vue
+        relChild1Of: "Invested in by",                      // views/CompanyInfoPage.vue
+        relParent1Of: "Investing in",                       // views/CompanyInfoPage.vue
+        rel2Of: "Business relationship with",               // views/CompanyInfoPage.vue
         searchBoxText: "Search for a company or brand.",    // components/CompanyAutocomplete.vue
         bigGraphLoader: "This may take a moment to load..." // components/GraphDisplay.vue
     }
