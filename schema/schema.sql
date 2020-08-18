@@ -24,6 +24,11 @@ CREATE TABLE `entity` (
   `icony` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `entityancestors` (
+  `entityid` int(11) NOT NULL,
+  `ancestorid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `feedback` (
   `id` int(11) NOT NULL,
   `text` varchar(1000) NOT NULL,
@@ -80,6 +85,10 @@ ALTER TABLE `entity`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id_UNIQUE` (`id`);
 ALTER TABLE `entity` ADD FULLTEXT KEY `name` (`name`);
+
+ALTER TABLE `entityancestors`
+  ADD KEY `entityid` (`entityid`),
+  ADD KEY `ancestorid` (`ancestorid`);
 
 ALTER TABLE `feedback`
   ADD PRIMARY KEY (`id`),
