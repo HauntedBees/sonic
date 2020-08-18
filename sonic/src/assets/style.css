@@ -1,12 +1,7 @@
 /* General Stuff */
 @font-face { font-family: "Nevis"; src: url("fonts/nevis2.ttf") }
-.v-list-item__title.wrap { white-space: normal }
 #app { background: repeat url("bg.png") }
 footer a { color: #000000 !important }
-
-/* Z-Index Stuff */
-header, .mobileNav { z-index: 8!important }
-footer { z-index: 8!important }
 
 /* Company Page Stuff */
 .beeheader {
@@ -47,6 +42,21 @@ h2.beesubmessage {
 }
 .viewNews > i:hover  { color: #97C8F8!important }
 
+/* Graph Stuff */
+.beebar {
+    position: relative;
+    z-index: 1;
+}
+.beebar::before {
+    border-top: 4px solid #000000;
+    content: "";
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0; bottom: 0;
+    width: 150px;
+    z-index: -1;
+}
 
 /* Headings and Subheadings */
 .beesubheader {
@@ -93,47 +103,6 @@ h2.beesubmessage {
 }
 .v-list-item.issue > * { z-index: 7 }
 .v-list-item__action { margin-left: 0!important }
-
-/* Graph Stuff */
-.beebar {
-    position: relative;
-    z-index: 1;
-}
-.beebar::before {
-    border-top: 4px solid #000000;
-    content: "";
-    margin: 0 auto;
-    position: absolute;
-    top: 50%;
-    left: 0; right: 0; bottom: 0;
-    width: 150px;
-    z-index: -1;
-}
-.graph {
-    background-color: #000048;
-    border: 2px solid #000000;
-    border-radius: 5px;
-    margin: 0 auto;
-}
-.tippy-content { cursor: default }
-
-/* Sidebar + Mobile Nav */
-.hasSidebar {
-    padding-left: 256px !important;
-    margin-bottom: 60px;
-}
-@media screen and (max-width: 600px) {
-    .hasSidebar {
-        padding-left: 12px !important;
-        margin-bottom: 200px;
-    }
-}
-.mobileNav {
-    position: fixed;
-    margin: 0 auto;
-    bottom: 40px;
-}
-.mobileNav > div { width: 100% }
 
 /* Browse Page Filters */
 .selectionchip {

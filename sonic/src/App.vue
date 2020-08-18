@@ -62,6 +62,7 @@
     </v-app>
 </template>
 <style>
+    @import "./assets/formatting.css";
     @import "./assets/style.css";
     @import "./assets/materialicons.min.css";
 </style>
