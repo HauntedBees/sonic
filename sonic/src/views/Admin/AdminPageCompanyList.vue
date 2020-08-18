@@ -8,7 +8,7 @@
                     </v-col>
                     <v-col cols="4">
                         <v-btn color="primary" class="mb-2" dark @click="Edit(null)">New Company</v-btn>
-                        <v-btn color="primary" class="mb-2" dark @click="RebuildRelationships()">Rebuild Relationships</v-btn>
+                        <v-btn color="primary" class="mb-2" style="margin-left:10px" dark @click="RebuildRelationships()">Rebuild Relationships</v-btn>
                     </v-col>
                 </v-row>
             </template>

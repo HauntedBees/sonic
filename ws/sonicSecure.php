@@ -198,7 +198,7 @@
         public function RebuildAllAncestors() {
             try {
                 $this->sql->BeginTransaction();
-                $this->sql->ExecuteNonQuery("DELETE FROM entityancestors");
+                $this->sql->ExecuteNonQuery("DELETE FROM entityancestors", []);
                 $this->sql->ExecuteNonQuery("
                 INSERT INTO entityancestors (entityid, ancestorid)
                 SELECT origId, parentId FROM (
@@ -229,7 +229,7 @@
                                 )
                                 SELECT origId, MAX(depth) AS depth FROM ancestor GROUP BY origId
                         ) a2 ON a.origId = a2.origId AND a.depth = a2.depth
-                ) v");
+                ) v", []);
                 $this->sql->CommitTransaction();
                 echo json_encode(["success" => true]);
             } catch(Exception $e) {
