@@ -41,7 +41,7 @@
                                 <v-icon>mdi-close</v-icon>
                             </v-btn>
                         </v-card-title>
-                        <FeedbackForm :issueID="issueId" :page="$route.path" modal @close="CloseFeedback" />
+                        <FeedbackForm v-if="feedbackModal" :issueID="issueId" :page="$route.path" modal @close="CloseFeedback" />
                     </v-card>
                 </v-dialog>
                 <v-btn text to="/admin/company" v-if="$store.state.auth && $route.path.indexOf('/admin') < 0">
