@@ -47,7 +47,7 @@
             Filter() { return true; },
             Query(query) {
                 if(query === "") { return; }
-                bee.get("SearchCompanies", query, data => {
+                bee.get("CompanySearch", [query], data => {
                     this.items = data.result;
                     if(this.items.length === 0) {
                         this.items = [{

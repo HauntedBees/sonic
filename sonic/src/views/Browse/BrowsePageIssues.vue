@@ -62,9 +62,9 @@
                 if(this.issues.length === 0 || this.$store.state.loading) { return; }
                 this.LoadIssues();
             },
-            LoadIssueTypes() { bee.get("GetIssueTypes", "", data => { this.issuetypes = data.result; }); },
+            LoadIssueTypes() { bee.get("IssueTypes", "", data => { this.issuetypes = data.result; }); },
             LoadIssues() {
-                bee.get("GetFullIssueList", [this.offset, JSON.stringify(this.selectedTypes)], data => {
+                bee.get("IssuesPage", [this.selectedTypes, this.offset], data => {
                     const resItems = data.result;
                     this.count = data.count;
                     if(resItems.length === 0) {

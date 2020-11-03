@@ -82,7 +82,7 @@
             currentYear() { return new Date().getFullYear(); }
         },
         created() {
-            bee.get("GetCounts", "", data => {
+            bee.get("Counts", "", data => {
                 this.issues = data.issues;
                 this.entities = data.entities;
             });

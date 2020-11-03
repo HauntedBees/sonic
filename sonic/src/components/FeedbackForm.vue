@@ -7,7 +7,7 @@
         </v-row>
         <v-row>
             <v-col>
-                <v-textarea :counter="1000" v-model="form.feedback" filled required label="Tell me your thoughts" />
+                <v-textarea :counter="1000" v-model="form.text" filled required label="Tell me your thoughts" />
             </v-col>
         </v-row>
         <v-row>
@@ -54,10 +54,11 @@
         },
         data: () => ({
             form: {
-                feedback: "",
+                text: "",
                 name: "",
                 contact: "",
                 captcha: "",
+                token: "",
                 issue: -1
             },
             imgUrl: ""
@@ -72,20 +73,21 @@
         created() { this.GetCaptcha(); },
         methods: {
             GetCaptcha() {
-                bee.get("GetCaptcha", "", data => {
+                bee.get("Captcha", "", data => {
                     this.imgUrl = data.img;
-                }, undefined, undefined, true);
+                    this.form.token = data.token;
+                });
             },
             SubmitFeedback() {
                 if(this.form.name.length >= 70) { return this.$store.commit("triggerError", "No more than 70 characters for your name, please."); }
                 if(this.form.contact.length >= 70) { return this.$store.commit("triggerError", "No more than 70 characters for your contact info, please."); }
-                if(this.form.feedback.length > 1000) { return this.$store.commit("triggerError", "No more than 1000 characters for your feedback, please."); }
+                if(this.form.text.length > 1000) { return this.$store.commit("triggerError", "No more than 1000 characters for your feedback, please."); }
                 const path = this.path;
                 this.form.path = path;
                 this.form.issue = this.issueID;
-                bee.post("SubmitFeedback", this.form, () => {
+                bee.post("Feedback", this.form, () => {
                     this.form = {
-                        feedback: "",
+                        text: "",
                         name: "",
                         captcha: "",
                         contact: "",

@@ -14,7 +14,7 @@
         created() { this.LoadGraph() },
         methods: {
             LoadGraph() {
-                beeSecure.get("GetFullCategoryGraphData", "", data => {
+                beeSecure.get("FullCategoryGraphData", "", data => {
                     this.nodes = data.nodes.map(n => ({
                         id: n.id,
                         name: n.name,

@@ -99,7 +99,7 @@
             Edit(item) {
                 this.editIdx = this.categories.indexOf(item);
                 this.editTarget = Object.assign({}, item);
-                beeSecure.get("GetCategoryParents", this.editTarget.id, data => {
+                beeSecure.get("CategoryParents", [this.editTarget.id], data => {
                     this.editTarget.parents = data.result;
                     this.dialog = true;
                 });
@@ -112,7 +112,7 @@
                 });
             },
             Save() {
-                beeSecure.post("SaveCategory", this.editTarget, data => {
+                beeSecure.post("Category", this.editTarget, data => {
                     this.editTarget.id = data.result;
                     if(this.editIdx < 0) {
                         this.categories.push(this.editTarget);
@@ -122,7 +122,7 @@
                     this.Close();
                 });
             },
-            LoadCategories() { beeSecure.get("GetCategories", "", data => { this.categories = data.result; }); }
+            LoadCategories() { beeSecure.get("Categories", "", data => { this.categories = data.result; }); }
         }
     }
 </script>

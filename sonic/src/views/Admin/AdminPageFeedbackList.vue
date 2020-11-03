@@ -39,10 +39,10 @@
             Dismiss(item) {
                 if(confirm("Dismiss this feedback?")) {
                     const dismissIdx = this.items.indexOf(item);
-                    beeSecure.post("DismissFeedback", item.id, () => { this.items.splice(dismissIdx, 1); });
+                    beeSecure.delete("Feedback", [item.id], () => { this.items.splice(dismissIdx, 1); });
                 }
             },
-            LoadItems() { beeSecure.get("GetFeedback", "", data => { this.items = data.result; }); }
+            LoadItems() { beeSecure.get("Feedback", "", data => { this.items = data.result; }); }
         }
     }
 </script>

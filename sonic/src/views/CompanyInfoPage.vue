@@ -121,7 +121,7 @@
             compChildren() { return this.entry.children.slice(0, 2); }
         },
         beforeRouteEnter(to, from, next) {
-            bee.get("FindCompany", encodeURIComponent(to.params.id), data => {
+            bee.get("Company", [to.params.id], data => {
                 next(vm => {
                     vm.entry = data.result;
                     vm.parentInfo = data.parentVals;
@@ -147,7 +147,7 @@
             this.notFound = false;
             this.links = [];
             this.nodes = [];
-            bee.get("FindCompany", encodeURIComponent(to.params.id), data => {
+            bee.get("Company", [to.params.id], data => {
                 this.entry = data.result;
                 this.parentInfo = data.parentVals;
                 next();
@@ -173,7 +173,7 @@
                 this.entry.investors = [];
                 this.entry.relationships = [];
                 this.showAdditional = true;
-                bee.get("GetAdditionalCompanyInfo", this.entry.id, data => {
+                bee.get("AdditionalCompanyInfo", [this.entry.id], data => {
                     this.entry.investments = data.investments.map(t => ({text: t}));
                     this.entry.investors = data.investors.map(t => ({text: t}));
                     this.entry.relationships = data.relationships.map(t => ({text: t}));
@@ -192,12 +192,12 @@
             ShowGraph() {
                 this.showGraph = true;
                 if(this.nodes.length > 0) { return; }
-                bee.get("GetGraphData", [this.entry.id, this.showAdditional], data => {
+                bee.get("GraphData", [this.entry.id, this.showAdditional], data => {
                     const nodeRef = {};
                     this.nodes = [];
                     this.links = [];
                     const existingLinks = {};
-                    data.family.forEach(info => {
+                    data.result.forEach(info => {
                         if(nodeRef[info.parentId] === undefined) {
                             const node = {
                                 id: info.parentId,

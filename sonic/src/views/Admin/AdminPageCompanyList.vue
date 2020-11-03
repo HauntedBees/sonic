@@ -40,7 +40,7 @@
             RebuildRelationships() {
                 beeSecure.get("RebuildAllAncestors", "", () => { this.$store.commit("triggerMessage", "Rebuilt successfully."); });
             },
-            LoadCompanies() { beeSecure.get("GetCompanies", "", data => { this.companies = data.result; }); }
+            LoadCompanies() { beeSecure.get("Companies", "", data => { this.companies = data.result; }); }
         }
     }
 </script>

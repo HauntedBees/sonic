@@ -145,7 +145,7 @@
             Delete(item) {
                 if(confirm("Are you sure you want to delete this issue?")) {
                     const delIdx = this.issues.indexOf(item);
-                    beeSecure.delete("DeleteIssue", item.id, () => { this.issues.splice(delIdx, 1); });
+                    beeSecure.delete("Issue", [item.id], () => { this.issues.splice(delIdx, 1); });
                 }
             },
             Edit(item) {
@@ -162,7 +162,7 @@
             },
             Save() {
                 this.editTarget.companyid = this.companyId;
-                beeSecure.post("SaveIssue", this.editTarget, data => {
+                beeSecure.post("Issue", this.editTarget, data => {
                     this.editTarget.id = data.result;
                     if(this.editIdx < 0) {
                         this.issues.push(this.editTarget);
@@ -172,11 +172,11 @@
                     this.Close();
                 });
             },
-            LoadIssues() { beeSecure.get("GetIssues", this.companyId, data => {
+            LoadIssues() { beeSecure.get("Issues", [this.companyId], data => {
                 this.issues = data.result;
                 this.issues.forEach(e => e.ongoing = e.ongoing === "1");
             }); },
-            LoadIssueTypes() { bee.get("GetIssueTypes", "", data => { this.issuetypes = data.result; }); }
+            LoadIssueTypes() { bee.get("IssueTypes", "", data => { this.issuetypes = data.result; }); }
         }
     }
 </script>

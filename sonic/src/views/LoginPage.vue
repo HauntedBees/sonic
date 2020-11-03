@@ -38,8 +38,9 @@
                 bee.post("Login", {
                     username: this.username,
                     password: this.password
-                }, () => {
-                    this.$store.commit("login", this.username);
+                }, res => {
+                    console.log(res.result);
+                    this.$store.commit("login", [this.username, res.result]);
                     this.$router.push("/admin");
                 }, true);
             }

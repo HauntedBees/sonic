@@ -4,8 +4,9 @@ class Beeliever {
         this.path = path;
         this.withCredentials = withCredentials || false;
     }
+    getHeaders() { return this.withCredentials ? { "Authorization": "Bearer " + store.state.token } : undefined; }
     handleResponse(response) {
-        if(!response.ok) {
+        if(!response.ok) { // TODO: actually show response messages if they exist
             if(response.status === 401) {
                 throw new Error("Access denied.");
             } else {
@@ -17,6 +18,7 @@ class Beeliever {
     auth(successCallback, errorCallback) {
         fetch(this.path + "Auth/", {
             method: "GET",
+            headers: this.getHeaders(),
             credentials: this.withCredentials ? "same-origin" : "omit"
         }).then(this.handleResponse).then(data => {
             successCallback(data);
@@ -27,16 +29,10 @@ class Beeliever {
     }
     get(path, param, successCallback, failCallback, errorCallback, forceCredentials) {
         if(store) { store.commit("startLoad"); }
-        let paramStr = "/";
-        if(param !== undefined) {
-            if(typeof param === "object") {
-                paramStr = "/" + param.join("/");
-            } else {
-                paramStr = "/" + param;
-            }
-        }
+        let paramStr = !param ? "/" : ("/" + encodeURIComponent(JSON.stringify(param)));
         fetch(this.path + path + paramStr, {
             method: "GET",
+            headers: this.getHeaders(),
             credentials: (forceCredentials || this.withCredentials) ? "same-origin" : "omit"
         }).then(this.handleResponse).then(data => {
             if(data.success) {
@@ -65,6 +61,7 @@ class Beeliever {
         fetch(this.path + path + "/", {
             method: "POST",
             body: JSON.stringify(obj),
+            headers: this.getHeaders(),
             credentials: (forceCredentials || this.withCredentials) ? "same-origin" : "omit"
         }).then(this.handleResponse).then(data => {
             if(data.success) {
@@ -80,8 +77,10 @@ class Beeliever {
     }
     delete(path, param, successCallback) {
         store.commit("startLoad");
-        fetch(this.path + path  + "/" + (param ? param : ""), {
+        let paramStr = !param ? "/" : ("/" + encodeURIComponent(JSON.stringify(param)));
+        fetch(this.path + path  + paramStr, {
             method: "DELETE",
+            headers: this.getHeaders(),
             credentials: this.withCredentials ? "same-origin" : "omit"
         }).then(this.handleResponse).then(data => {
             if(data.success) {
@@ -96,5 +95,5 @@ class Beeliever {
         });
     }
 }
-export const bee = new Beeliever("https://www.hauntedbees.com/wstest/sonic/");
-export const beeSecure = new Beeliever("https://www.hauntedbees.com/wstest/sonicSecure/", true);
+export const bee = new Beeliever(process.env.VUE_APP_API_PATH);
+export const beeSecure = new Beeliever(process.env.VUE_APP_SECURE_API_PATH, true);

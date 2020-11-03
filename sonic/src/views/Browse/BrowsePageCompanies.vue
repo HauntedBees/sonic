@@ -57,7 +57,7 @@
                 this.LoadCompanies();
             },
             LoadCompanies() {
-                bee.get("GetCompanyBrowse", [this.offset, this.search.trim()], data => {
+                bee.get("CompaniesPage", [this.search.trim(), this.offset], data => {
                     const resItems = data.result;
                     this.count = data.count;
                     if(resItems.length === 0) {

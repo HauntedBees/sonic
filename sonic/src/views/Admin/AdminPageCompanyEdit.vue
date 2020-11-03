@@ -182,10 +182,10 @@
             this.CompanySearch();
         },
         methods: {
-            QueryCategory(query) { beeSecure.get("SearchCategories", query, data => { this.categories = data.result.map(e => ({ value: e.id, text: e.name })); }); },
-            QueryParent(query) { bee.get("SearchCompanies", query, data => { this.parentItems = data.result.map(e => ({ value: e.id, text: e.name })); }); },
+            QueryCategory(query) { beeSecure.get("Categories", [query], data => { this.categories = data.result.map(e => ({ value: e.id, text: e.name })); }); },
+            QueryParent(query) { bee.get("CompanySearch", [query], data => { this.parentItems = data.result.map(e => ({ value: e.id, text: e.name })); }); },
             CompanySearch() {
-                bee.get("FindCompany", this.company.name, data => {
+                bee.get("Company", [this.company.name], data => {
                     this.parentItems = [];
                     for(const key in data.parentVals) {
                         const obj = data.parentVals[key];
@@ -203,7 +203,7 @@
                     this.company.investors = [];
                     this.company.miscrelationships = [];
                     this.showIcon = this.company.iconx !== null;
-                    beeSecure.get("GetAdditionalCompanyInfo", this.company.id, addtldata => {
+                    beeSecure.get("AdditionalCompanyInfo", [this.company.id], addtldata => {
                         addtldata.investors.forEach(e => {
                             this.parentItems.push({
                                 value: e.id,
@@ -273,7 +273,7 @@
                     this.company.icony = null;
                     this.company.img = 0;
                 }
-                beeSecure.post("SaveCompany", this.company, () => {
+                beeSecure.post("Company", this.company, () => {
                     this.$store.commit("triggerMessage", "Saved successfully.");
                     this.CompanySearch();
                 });

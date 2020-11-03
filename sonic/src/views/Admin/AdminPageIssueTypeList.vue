@@ -104,7 +104,7 @@
                 });
             },
             Save() {
-                beeSecure.post("SaveIssueType", this.editTarget, data => {
+                beeSecure.post("IssueType", this.editTarget, data => {
                     this.editTarget.id = data.result;
                     if(this.editIdx < 0) {
                         this.issuetypes.push(this.editTarget);
@@ -114,7 +114,7 @@
                     this.Close();
                 });
             },
-            LoadIssueTypes() { bee.get("GetIssueTypes", "", data => { this.issuetypes = data.result; }); }
+            LoadIssueTypes() { bee.get("IssueTypes", "", data => { this.issuetypes = data.result; }); }
         }
     }
 </script>

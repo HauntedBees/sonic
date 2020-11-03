@@ -27,16 +27,20 @@ const store = new Vuex.Store({
         messageText: "",
         messageType: "",
         auth: false,
-        username: ""
+        username: "",
+        token: ""
     },
     mutations: {
-        login(state, username) {
+        login(state, res) {
             state.auth = true;
-            state.username = username;
+            state.username = res[0];
+            state.token = res[1];
+            console.log("TOKEN: " + state.token);
         },
         logout(state) {
             state.auth = false;
             state.username = "";
+            state.token = "";
         },
         startLoad(state) {
             state.loading = true;

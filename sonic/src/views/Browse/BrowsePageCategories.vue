@@ -122,7 +122,7 @@
                 this.LoadCompanies();
             },
             LoadInitialCategories() {
-                bee.get("GetTopLevelCategories", "", data => {
+                bee.get("RootCategories", null, data => {
                     this.categories = data.result;
                     this.cachedResults["0"] = data.result;
                 });
@@ -137,7 +137,7 @@
                     this.categories = this.cachedResults[category];
                     this.LoadCompanies();
                 } else {
-                    bee.get("GetChildCategories", category, data => {
+                    bee.get("ChildCategories", [category], data => {
                         this.categories = data.result;
                         this.cachedResults[category] = data.result;
                         this.LoadCompanies();
@@ -145,7 +145,7 @@
                 }
             },
             LoadCompanies() {
-                bee.get("GetCompanyByCategory", [this.offset, this.filterCategory], data => {
+                bee.get("CompaniesByCategoryPage", [this.filterCategory, this.offset], data => {
                     const resItems = data.result;
                     this.count = data.count;
                     if(resItems.length === 0) {

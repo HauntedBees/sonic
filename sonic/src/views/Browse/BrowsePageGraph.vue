@@ -14,7 +14,7 @@
         created() { this.LoadGraph() },
         methods: {
             LoadGraph() {
-                bee.get("GetFullGraphDataFromCache", "", data => {
+                bee.get("CachedFullGraphData", "", data => {
                     this.nodes = data.nodes;
                     this.links = data.links;
                     this.graphLoaded = true;
@@ -29,7 +29,7 @@
             window.InitializeLogoImages(window.GetGraphDataForCache);
             return;
         }
-        bee.get("GetFullGraphData", "", data => {
+        bee.get("FullGraphData", "", data => {
             try {
                 const res = { success: true };
                 res.nodes = data.nodes.map(n => ({

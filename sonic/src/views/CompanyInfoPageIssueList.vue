@@ -67,7 +67,7 @@
         methods: {
             LoadIssues() {
                 this.issues = [];
-                bee.get("GetAllIssues", [this.companyId, this.showAllRelationships], data => {
+                bee.get("CompanyIssues", [this.companyId, this.showAllRelationships], data => {
                     this.issues = data.result.filter(i => i.issueTypeId !== 0);
                     this.noIssues = this.issues.length === 0;
                     this.issues.forEach(e => e.ongoing = e.ongoing === "1");
